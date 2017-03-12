@@ -290,7 +290,14 @@ void I_sndArbitrateCards(void)
         if (GF1_Detect()) printf("Dude.  The GUS ain't responding.\n");
         else
         {
-          dmxlump = W_GetNumForName("dmxgus");
+          if (W_CheckNumForName("dmxgusc") < 0)
+          {
+            dmxlump = W_GetNumForName("dmxgus");
+          }
+          else
+          {
+            dmxlump = W_GetNumForName("dmxgusc");
+          }
           GF1_SetMap(W_CacheLumpNum(dmxlump, PU_CACHE), lumpinfo[dmxlump].size);
         }
 
