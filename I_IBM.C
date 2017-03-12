@@ -328,6 +328,10 @@ void I_SetPalette(byte *palette)
 	}
 	I_WaitVBL(1);
 	_outbyte(PEL_WRITE_ADR, 0);
+	if(usegamma > 4 || usegamma < 0)
+	{
+		usegamma = 0;
+	}
 	for(i = 0; i < 768; i++)
 	{
 		_outbyte(PEL_DATA, (gammatable[usegamma][*palette++])>>2);
