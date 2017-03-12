@@ -287,7 +287,10 @@ void P_ZMovement (mobj_t* mo)
 		// after hitting the ground (hard),
 		// and utter appropriate sound.
 		mo->player->deltaviewheight = mo->momz>>3;
-		S_StartSound (mo, sfx_oof);
+		if (mo->health > 0)
+		{
+			S_StartSound (mo, sfx_oof);
+		}
 	    }
 	    mo->momz = 0;
 	}
