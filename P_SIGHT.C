@@ -67,7 +67,7 @@ P_DivlineSide
     
     if (!node->dy)
     {
-	if (x==node->y)
+	if (y==node->y)
 	    return 2;
 
 	if (y <= node->y)
