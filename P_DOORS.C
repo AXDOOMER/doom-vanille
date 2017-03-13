@@ -400,7 +400,14 @@ EV_VerticalDoor
 	}
 	break;
     }
-	
+
+    // if the door action is on a single-sided linedef, ignore
+    if (line->sidenum[side^1] == -1)
+    {
+        S_StartSound(NULL,sfx_oof);
+        return;
+    }
+
     // if the sector has an active thinker, use it
     sec = sides[ line->sidenum[side^1]] .sector;
     secnum = sec-sectors;
