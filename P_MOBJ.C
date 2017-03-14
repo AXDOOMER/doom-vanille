@@ -120,7 +120,7 @@ void P_XYMovement (mobj_t* mo)
 	    mo->flags &= ~MF_SKULLFLY;
 	    mo->momx = mo->momy = mo->momz = 0;
 
-	    P_SetMobjState (mo, mo->info->spawnstate);
+	    P_SetMobjState (mo, mo->info->seestate);
 	}
 	return;
     }
