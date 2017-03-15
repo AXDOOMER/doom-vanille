@@ -270,6 +270,16 @@ boolean PIT_CheckThing (mobj_t* thing)
 	damage = ((P_Random()%8)+1)*tmthing->info->damage;
 	
 	P_DamageMobj (thing, tmthing, tmthing, damage);
+	
+	if (thing->health <= 0)
+	{
+	    tmthing->flags &= ~MF_SKULLFLY;
+	    tmthing->momx = tmthing->momy = tmthing->momz = 0;
+	
+	    P_SetMobjState (tmthing, tmthing->info->spawnstate);
+	
+	    return false;		// stop moving
+	}
     }
 
     
