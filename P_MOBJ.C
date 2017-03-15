@@ -276,6 +276,12 @@ void P_ZMovement (mobj_t* mo)
     // clip movement
     if (mo->z <= mo->floorz)
     {
+	// hit the floor
+	if (mo->flags & MF_SKULLFLY)
+	{
+	    // the skull slammed into something
+	    mo->momz = -mo->momz;
+	}
 	
 	if (mo->momz < 0)
 	{
@@ -295,13 +301,6 @@ void P_ZMovement (mobj_t* mo)
 	    mo->momz = 0;
 	}
 	mo->z = mo->floorz;
-
-	// hit the floor
-	if (mo->flags & MF_SKULLFLY)
-	{
-	    // the skull slammed into something
-	    mo->momz = -mo->momz;
-	}
 
 	if ( (mo->flags & MF_MISSILE)
 	     && !(mo->flags & MF_NOCLIP) )
