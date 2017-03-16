@@ -21,8 +21,8 @@
 //
 
 
-#define	BGCOLOR		4
-#define	FGCOLOR		7
+#define	BGCOLOR		15
+#define	FGCOLOR		2
 
 #include <stdlib.h>
 #include <dos.h>
