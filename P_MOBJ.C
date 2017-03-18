@@ -939,18 +939,15 @@ P_SpawnPlayerMissile
     
     if (!linetarget)
     {
-	an += 1<<26;
-	slope = P_AimLineAttack (source, an, 16*64*FRACUNIT);
+	slope = P_AimLineAttack (source, an+(1<<26), 16*64*FRACUNIT);
 
 	if (!linetarget)
 	{
-	    an -= 2<<26;
-	    slope = P_AimLineAttack (source, an, 16*64*FRACUNIT);
+	    slope = P_AimLineAttack (source, an-(1<<26), 16*64*FRACUNIT);
 	}
 
 	if (!linetarget)
 	{
-	    an = source->angle;
 	    slope = 0;
 	}
     }
