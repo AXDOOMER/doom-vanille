@@ -434,7 +434,7 @@ void D_AdvanceDemo (void)
     paused = false;
     gameaction = ga_nothing;
 
-    demosequence = (demosequence+1)%6;
+    demosequence = (demosequence+1)%7;
     
     switch (demosequence)
     {
@@ -481,7 +481,8 @@ void D_AdvanceDemo (void)
 	break;
         // THE DEFINITIVE DOOM Special Edition demo
       case 6:
-	G_DeferedPlayDemo ("demo4");
+	if (W_CheckNumForName("demo4")>=0)
+	    G_DeferedPlayDemo ("demo4");
 	break;
     }
 }
