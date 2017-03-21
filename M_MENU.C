@@ -1688,6 +1688,9 @@ boolean M_Responder (event_t* ev)
 	}
 	return true;
 	
+      case 0:
+	break;
+	
       default:
 	for (i = itemOn+1;i < currentMenu->numitems;i++)
 	    if (currentMenu->menuitems[i].alphaKey == ch)
