@@ -44,6 +44,7 @@
 #define BFGCELLS		40		
 
 //
+// PSPRITE ACTIONS for weapons.
 // This struct controls the weapon animations.
 //
 // Each entry is:
