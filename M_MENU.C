@@ -779,18 +779,17 @@ void M_DrawReadThis1(void)
 //
 // Read This Menus - optional second page.
 //
-#if 0
 void M_DrawReadThis2(void)
 {
     inhelpscreens = true;
     V_DrawPatchDirect(0, 0, 0, W_CacheLumpName("HELP1", PU_CACHE));
 }
-#endif
+
 
 void M_DrawReadThisRetail(void)
 {
     inhelpscreens = true;
-    V_DrawPatchDirect(0, 0, 0, W_CacheLumpName("HELP", PU_CACHE));
+    V_DrawPatchDirect(0, 0, 0, W_CacheLumpName("HELP1", PU_CACHE));
 }
 
 
