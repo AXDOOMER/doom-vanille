@@ -440,6 +440,25 @@ void G_DoLoadLevel (void)
 { 
     int             i; 
 
+    // Set the sky map.
+    // First thing, we have a dummy sky texture name,
+    //  a flat. The data is in the WAD only because
+    //  we look for an actual index, instead of simply
+    //  setting one.
+    skyflatnum = R_FlatNumForName ( SKYFLATNAME );
+
+    // DOOM determines the sky texture to be used
+    // depending on the current episode, and the game version.
+    if (commercial)
+    {
+	skytexture = R_TextureNumForName ("SKY3");
+	if (gamemap < 12)
+	    skytexture = R_TextureNumForName ("SKY1");
+	else
+	    if (gamemap < 21)
+		skytexture = R_TextureNumForName ("SKY2");
+    }
+
     levelstarttic = gametic;        // for time calculation
     
     if (wipegamestate == GS_LEVEL) 
