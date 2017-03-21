@@ -1,5 +1,5 @@
 # Doom Vanille
-Linux Doom ported to DOS. Aims at 100% compatibility with the original Final Doom executable, but will still work fine with the shareware, registed and retail (Ultimate) versions of Doom. 
+Linux Doom ported to DOS. Aims at 100% compatibility with the original Final Doom (id Anthology) executable, but will still work fine with the shareware, registed and retail (Ultimate) versions of Doom. 
 
 ## Supported games
 * Doom Shareware
