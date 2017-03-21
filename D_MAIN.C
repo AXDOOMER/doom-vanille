@@ -634,7 +634,6 @@ void D_AddFile (char *file)
 //
 void IdentifyVersion (void)
 {
-
     strcpy(basedefault,"default.cfg");
     if (M_CheckParm ("-shdev"))
     {
@@ -677,63 +676,143 @@ void IdentifyVersion (void)
 	strcpy (basedefault,DEVDATA"default.cfg");
 	return;
     }
+{
+    int p = M_CheckParm ("-iwad");
+    char* iwadname;
 
-    if ( !access ("doom2f.wad",R_OK) )
+    if (p && p < myargc-1)
     {
-	commercial = true;
-	// C'est ridicule!
-	// Let's handle languages in config files, okay?
-	french = true;
-	printf("French version\n");
-	D_AddFile ("doom2f.wad");
-	return;
-    }
+	iwadname = myargv[p+1];
+	printf ("Looking for %s\n", iwadname);
+	if( !access (myargv[p+1],R_OK) )
+	{
+	    if ( strcmp(iwadname,"doom2f.wad")==0 )
+	    {
+	        commercial = true;
+	        // Putain de merde
+	        french = true;
+	        printf("French version\n");
+	        D_AddFile ("doom2f.wad");
+	        return;
+	    }
 
-    if ( !access ("doom2.wad",R_OK) )
+	    if ( strcmp(iwadname,"doom2.wad")==0 )
+	    {
+	        commercial = true;
+	        D_AddFile ("doom2.wad");
+	        return;
+	    }
+
+	    if ( strcmp(iwadname,"plutonia.wad")==0 )
+	    {
+	        commercial = true;
+	        plutonia = true;
+	        D_AddFile ("plutonia.wad");
+	        return;
+	    }
+
+	    if ( strcmp(iwadname,"tnt.wad")==0 )
+	    {
+	        commercial = true;
+	        tnt = true;
+	        D_AddFile ("tnt.wad");
+	        return;
+	    }
+
+	    if ( strcmp(iwadname,"doomu.wad")==0 )
+	    {
+	        registered = true;
+	        retail = true;
+	        D_AddFile ("doomu.wad");
+	        return;
+	    }
+
+	    if ( strcmp(iwadname,"doomr.wad")==0 )
+	    {
+	        registered = true;
+	        D_AddFile ("doomr.wad");
+	        return;
+	    }
+
+	    if ( strcmp(iwadname,"doom.wad")==0 )
+	    {
+	        registered = true;
+	        D_AddFile ("doom.wad");
+	        return;
+	    }
+
+	    if ( strcmp(iwadname,"doom1.wad")==0 )
+	    {
+	        shareware = true;
+	        D_AddFile ("doom1.wad");
+	        return;
+	    }
+	}
+	else
+	{
+	    printf ("Specified IWAD %s not found.\n", iwadname);
+	    //I_Error ("Specified IWAD not found.\n");
+	}
+    }
+    else
     {
-	commercial = true;
-	D_AddFile ("doom2.wad");
-	return;
-    }
+	if ( !access ("doom2f.wad",R_OK) )
+	{
+	    commercial = true;
+	    // C'est ridicule!
+	    // Let's handle languages in config files, okay?
+	    french = true;
+	    printf("French version\n");
+	    D_AddFile ("doom2f.wad");
+	    return;
+	}
 
-    if ( !access ("plutonia.wad", R_OK ) )
-    {
-      commercial = true;
-      plutonia = true;
-      D_AddFile ("plutonia.wad");
-      return;
-    }
+	if ( !access ("doom2.wad",R_OK) )
+	{
+	    commercial = true;
+	    D_AddFile ("doom2.wad");
+	    return;
+	}
 
-    if ( !access ( "tnt.wad", R_OK ) )
-    {
-      commercial = true;
-      tnt = true;
-      D_AddFile ("tnt.wad");
-      return;
-    }
+	if ( !access ("plutonia.wad", R_OK ) )
+	{
+	    commercial = true;
+	    plutonia = true;
+	    D_AddFile ("plutonia.wad");
+	    return;
+	}
 
-    if ( !access ("doomu.wad",R_OK) )
-    {
-      registered = true;
-      retail = true;
-      D_AddFile ("doomu.wad");
-      return;
-    }
+	if ( !access ( "tnt.wad", R_OK ) )
+	{
+	    commercial = true;
+	    tnt = true;
+	    D_AddFile ("tnt.wad");
+	    return;
+	}
 
-    if ( !access ("doom.wad",R_OK) )
-    {
-      registered = true;
-      D_AddFile ("doom.wad");
-      return;
-    }
+	if ( !access ("doomu.wad",R_OK) )
+	{
+	    registered = true;
+	    retail = true;
+	    D_AddFile ("doomu.wad");
+	    return;
+	}
 
-    if ( !access ("doom1.wad",R_OK) )
-    {
-      shareware = true;
-      D_AddFile ("doom1.wad");
-      return;
-    }
+	if ( !access ("doom.wad",R_OK) )
+	{
+	    registered = true;
+	    D_AddFile ("doom.wad");
+	    return;
+	}
 
+	if ( !access ("doom1.wad",R_OK) )
+	{
+	    shareware = true;
+	    D_AddFile ("doom1.wad");
+	    return;
+	}
+    }
+}
     printf("Game mode indeterminate.\n");
     exit(1);
     //I_Error ("Game mode indeterminate\n");
