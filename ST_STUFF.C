@@ -689,7 +689,8 @@ ST_Responder (event_t* ev)
       }
 
       // Catch invalid maps.
-      if ((!commercial && epsd > 0 && epsd < 5 && map > 0 && map < 10)
+      if ((!commercial && retail && epsd > 0 && epsd < 5 && map > 0 && map < 10)
+       || (!commercial && epsd > 0 && epsd < 4 && map > 0 && map < 10)
        || (commercial && map > 0 && map <= 40))
       {
           // So be it.
