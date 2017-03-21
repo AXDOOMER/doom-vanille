@@ -19,8 +19,8 @@
 //  and call the startup functions.
 //
 
-#define	BGCOLOR		15
-#define	FGCOLOR		2
+#define	BGCOLOR		2
+#define	FGCOLOR		15
 
 #include <stdlib.h>
 #include <dos.h>
@@ -369,9 +369,6 @@ void D_DoomLoop (void)
 
     while (1)
     {
-	// frame syncronous IO operations
-	I_StartFrame ();                
-	
 	// process one or more tics
 	if (singletics)
 	{

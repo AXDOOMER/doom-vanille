@@ -225,7 +225,8 @@ typedef enum
 
 #define KEY_LALT	KEY_RALT
 
-
+#define SHORT(x)	(x)
+#define LONG(x)		(x)
 
 // DOOM basic types (boolean),
 //  and max/min values.
