@@ -1038,7 +1038,7 @@ void D_DoomMain (void)
 	    "credit","m_epi4","demo4"
 	};
         int i;
-	for (i = 0;i < 11; i++)
+	for (i = 0;i < 12; i++)
         {
             if (W_CheckNumForName(name[i])>-1)
             {
