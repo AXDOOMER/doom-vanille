@@ -337,8 +337,8 @@ void R_GenerateLookup (int texnum)
     {
 	if (!patchcount[x])
 	{
-	    printf ("R_GenerateLookup: column without a patch (%s)\n",
-		    texture->name);
+	    printf ("R_GenerateLookup: Column %d is without a patch in texture %s\n",
+		    x, texture->name);
 	    return;
 	}
 	// I_Error ("R_GenerateLookup: column without a patch");
