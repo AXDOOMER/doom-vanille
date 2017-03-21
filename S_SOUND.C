@@ -184,6 +184,11 @@ S_ChangeMusic
         musicnum = mus_introa;
     }
 
+    if (musicnum >= NUMMUSIC)
+    {
+	musicnum = mus_runnin + (musicnum % (NUMMUSIC - mus_runnin));
+    }
+
     if ( (musicnum <= mus_None)
 	 || (musicnum >= NUMMUSIC) )
     {
