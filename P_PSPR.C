@@ -1,6 +1,7 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
 // Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2017 Alexandre-Xavier Labonté-Lamoureux
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -44,7 +45,7 @@
 #define BFGCELLS		40		
 
 //
-// PSPRITE ACTIONS for weapons.
+// PSPRITE ACTIONS for waepons.
 // This struct controls the weapon animations.
 //
 // Each entry is:

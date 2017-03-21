@@ -1,6 +1,7 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
 // Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2017 Alexandre-Xavier Labonté-Lamoureux
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -1031,17 +1032,17 @@ void D_DoomMain (void)
     
     if (registered)
     {
-	char name[11][8]=
+	char name[12][8]=
 	{
 	    "e4m1","e4m2","e4m3","e4m4","e4m5","e4m6","e4m7","e4m8","e4m9",
-	    "credit","m_epi4"
+	    "credit","m_epi4","demo4"
 	};
         int i;
 	for (i = 0;i < 11; i++)
         {
             if (W_CheckNumForName(name[i])>-1)
             {
-	        if (i == 10)
+	        if (i == 11)
                 {
                     retail = true;
                     sprintf(title,
