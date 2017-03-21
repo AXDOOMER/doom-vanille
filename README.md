@@ -1,26 +1,32 @@
 # Doom Vanille
-Linux Doom ported to DOS. Aims at 100% compatibility with the original Final Doom executable, but will accomodate engines of the same version which have small changes. 
-
-**Currently, this project has gone wild and does not have any compatiblity at all. Compatibility will be added back later.**
+Linux Doom ported to DOS. Aims at 100% compatibility with the original Final Doom executable, but will still work fine with the shareware, registed and retail (Ultimate) versions of Doom. 
 
 ## Supported games
-Every version of Doom marked as *v1.9*.
+* Doom Shareware
 * Doom Registered
 * The Ultimate Doom
-* Doom II
-* Final Doom
-* Final Doom (anthology)
+* Doom II: Hell on Earth
+* TNT
+* Plutonia
+
+You can see the supported IWADs name [here](https://github.com/AXDOOMER/doom-vanille/wiki/Supported-IWADs).
+
+If you have multiple IWADs in your directory, you can use the `-iwad` parameter to specify which IWAD to use. 
 
 ## Source code
 
-Doom Vanille is based on [pcdoom](https://github.com/nukeykt/pcdoom).
+Doom Vanille is based on [PCDoom](https://github.com/nukeykt/pcdoom), but was updated to [PCDoom2](https://github.com/nukeykt/PCDoom-v2/).
 
-**Build instructions:**
+## Changes
+
+Please visit the [bug fixes](https://github.com/AXDOOMER/doom-vanille/wiki/Fixed-bugs) page on the [wiki](https://github.com/AXDOOMER/doom-vanille/wiki).
+
+## Build instructions
 
 1) Install Open Watcom C.
 
-2) Copy all files from dmxwrapper to root directory.
+2) Open pcdoom.wpj in Watcom.
 
-3) Open pcdoom.wpj in Watcom.
+3) Build.
 
-4) Build.
+4) Copy `pcdoom.exe` to your Doom folder. 
