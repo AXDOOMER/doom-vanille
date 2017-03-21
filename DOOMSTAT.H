@@ -66,6 +66,7 @@ extern  int		gamemap;
 
 extern  boolean         shareware;
 extern  boolean         registered;
+extern  boolean         retail;
 extern  boolean         commercial;
 extern  boolean         plutonia;
 extern  boolean         tnt;

@@ -434,8 +434,11 @@ void D_AdvanceDemo (void)
     paused = false;
     gameaction = ga_nothing;
 
-    demosequence = (demosequence+1)%7;
-    
+    if(W_CheckNumForName("demo4")<0)
+        demosequence = (demosequence+1)%6;
+    else
+        demosequence = (demosequence+1)%7;
+
     switch (demosequence)
     {
       case 0:
@@ -481,8 +484,7 @@ void D_AdvanceDemo (void)
 	break;
         // THE DEFINITIVE DOOM Special Edition demo
       case 6:
-	if (W_CheckNumForName("demo4")>=0)
-	    G_DeferedPlayDemo ("demo4");
+	G_DeferedPlayDemo ("demo4");
 	break;
     }
 }
@@ -706,6 +708,14 @@ void IdentifyVersion (void)
       commercial = true;
       tnt = true;
       D_AddFile ("tnt.wad");
+      return;
+    }
+
+    if ( !access ("doomu.wad",R_OK) )
+    {
+      registered = true;
+      retail = true;
+      D_AddFile ("doomu.wad");
       return;
     }
 

@@ -22,6 +22,7 @@
 
 // Game Mode - identify IWAD as shareware, retail etc.
 boolean commercial;
+boolean retail;
 boolean registered;
 boolean shareware;
 

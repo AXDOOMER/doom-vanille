@@ -26,6 +26,7 @@
 
 
 #include "doomdef.h"
+#include "doomstat.h"
 #include "dstrings.h"
 
 #include "d_main.h"
@@ -1866,5 +1867,9 @@ void M_Init (void)
         ReadDef1.y = 165;
         ReadMenu1[0].routine = M_FinishReadThis;
     }
+
+    // We need to remove the fourth episode.
+    if (registered && !retail)
+        EpiDef.numitems--;
 }
 
