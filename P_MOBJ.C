@@ -1,7 +1,6 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
-// Copyright (C) 1993-2008 Raven Software
-// Copyright (C) 2015 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -19,7 +18,7 @@
 
 #include "i_system.h"
 #include "z_zone.h"
-#include "m_random.h"
+#include "m_misc.h"
 
 #include "doomdef.h"
 #include "p_local.h"
@@ -120,7 +119,7 @@ void P_XYMovement (mobj_t* mo)
 	    mo->flags &= ~MF_SKULLFLY;
 	    mo->momx = mo->momy = mo->momz = 0;
 
-	    P_SetMobjState (mo, mo->info->seestate);
+	    P_SetMobjState (mo, mo->info->spawnstate);
 	}
 	return;
     }
@@ -142,7 +141,7 @@ void P_XYMovement (mobj_t* mo)
 	
     do
     {
-	if ((xmove > MAXMOVE/2 || ymove > MAXMOVE/2) && (xmove < -MAXMOVE/2 || ymove < -MAXMOVE/2))
+	if (xmove > MAXMOVE/2 || ymove > MAXMOVE/2)
 	{
 	    ptryx = mo->x + xmove/2;
 	    ptryy = mo->y + ymove/2;
@@ -277,6 +276,10 @@ void P_ZMovement (mobj_t* mo)
     if (mo->z <= mo->floorz)
     {
 	// hit the floor
+
+	// Note (id):
+	//  somebody left this after the setting momz to 0,
+	//  kinda useless there.
 	if (mo->flags & MF_SKULLFLY)
 	{
 	    // the skull slammed into something
@@ -334,14 +337,7 @@ void P_ZMovement (mobj_t* mo)
 	if ( (mo->flags & MF_MISSILE)
 	     && !(mo->flags & MF_NOCLIP) )
 	{
-	    if (mo->subsector->sector->ceilingpic == skyflatnum)
-	    {
-	        P_RemoveMobj (mo);
-	    }
-	    else
-	    {
-	        P_ExplodeMissile (mo);
-	    }
+	    P_ExplodeMissile (mo);
 	    return;
 	}
     }
@@ -763,7 +759,9 @@ void P_SpawnMapThing (mapthing_t* mthing)
 	return;
 		
     // don't spawn any monsters if -nomonsters
-    if (nomonsters && mobjinfo[i].flags & MF_COUNTKILL)
+    if (nomonsters
+	&& ( i == MT_SKULL
+	     || (mobjinfo[i].flags & MF_COUNTKILL)) )
     {
 	return;
     }
@@ -946,15 +944,18 @@ P_SpawnPlayerMissile
     
     if (!linetarget)
     {
-	slope = P_AimLineAttack (source, an+(1<<26), 16*64*FRACUNIT);
+	an += 1<<26;
+	slope = P_AimLineAttack (source, an, 16*64*FRACUNIT);
 
 	if (!linetarget)
 	{
-	    slope = P_AimLineAttack (source, an-(1<<26), 16*64*FRACUNIT);
+	    an -= 2<<26;
+	    slope = P_AimLineAttack (source, an, 16*64*FRACUNIT);
 	}
 
 	if (!linetarget)
 	{
+	    an = source->angle;
 	    slope = 0;
 	}
     }

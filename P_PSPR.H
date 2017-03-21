@@ -1,7 +1,6 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
-// Copyright (C) 1993-2008 Raven Software
-// Copyright (C) 2015 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -22,7 +21,7 @@
 
 // Basic data types.
 // Needs fixed point, and BAM angles.
-#include "m_fixed.h"
+#include "doomdef.h"
 #include "tables.h"
 
 
@@ -34,6 +33,7 @@
 // i.e. the Thing Atrributes table
 // and the Frame Sequence table.
 #include "info.h"
+
 
 //
 // Frame flags:
@@ -65,5 +65,19 @@ typedef struct
     fixed_t	sy;
 
 } pspdef_t;
+
+// Weapon info: sprite frames, ammunition use.
+typedef struct
+{
+    ammotype_t	ammo;
+    int		upstate;
+    int		downstate;
+    int		readystate;
+    int		atkstate;
+    int		flashstate;
+
+} weaponinfo_t;
+
+extern  weaponinfo_t    weaponinfo[NUMWEAPONS];
 
 #endif

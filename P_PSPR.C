@@ -1,7 +1,6 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
-// Copyright (C) 1993-2008 Raven Software
-// Copyright (C) 2015 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -22,7 +21,7 @@
 #include "d_event.h"
 
 
-#include "m_random.h"
+#include "m_misc.h"
 #include "p_local.h"
 #include "s_sound.h"
 
@@ -44,6 +43,101 @@
 // plasma cells for a bfg attack
 #define BFGCELLS		40		
 
+//
+// This struct controls the weapon animations.
+//
+// Each entry is:
+//   ammo/amunition type
+//  upstate
+//  downstate
+// readystate
+// atkstate, i.e. attack/fire/hit frame
+// flashstate, muzzle flash
+//
+weaponinfo_t	weaponinfo[NUMWEAPONS] =
+{
+    {
+	// fist
+	am_noammo,
+	S_PUNCHUP,
+	S_PUNCHDOWN,
+	S_PUNCH,
+	S_PUNCH1,
+	S_NULL
+    },	
+    {
+	// pistol
+	am_clip,
+	S_PISTOLUP,
+	S_PISTOLDOWN,
+	S_PISTOL,
+	S_PISTOL1,
+	S_PISTOLFLASH
+    },	
+    {
+	// shotgun
+	am_shell,
+	S_SGUNUP,
+	S_SGUNDOWN,
+	S_SGUN,
+	S_SGUN1,
+	S_SGUNFLASH1
+    },
+    {
+	// chaingun
+	am_clip,
+	S_CHAINUP,
+	S_CHAINDOWN,
+	S_CHAIN,
+	S_CHAIN1,
+	S_CHAINFLASH1
+    },
+    {
+	// missile launcher
+	am_misl,
+	S_MISSILEUP,
+	S_MISSILEDOWN,
+	S_MISSILE,
+	S_MISSILE1,
+	S_MISSILEFLASH1
+    },
+    {
+	// plasma rifle
+	am_cell,
+	S_PLASMAUP,
+	S_PLASMADOWN,
+	S_PLASMA,
+	S_PLASMA1,
+	S_PLASMAFLASH1
+    },
+    {
+	// bfg 9000
+	am_cell,
+	S_BFGUP,
+	S_BFGDOWN,
+	S_BFG,
+	S_BFG1,
+	S_BFGFLASH1
+    },
+    {
+	// chainsaw
+	am_noammo,
+	S_SAWUP,
+	S_SAWDOWN,
+	S_SAW,
+	S_SAW1,
+	S_NULL
+    },
+    {
+	// super shotgun
+	am_shell,
+	S_DSGUNUP,
+	S_DSGUNDOWN,
+	S_DSGUN,
+	S_DSGUN1,
+	S_DSGUNFLASH1
+    },	
+};
 
 //
 // P_SetPsprite
@@ -177,13 +271,13 @@ boolean P_CheckAmmo (player_t* player)
     {
 	if (player->weaponowned[wp_plasma]
 	    && player->ammo[am_cell]
-	    && !shareware )
+	    && (!shareware) )
 	{
 	    player->pendingweapon = wp_plasma;
 	}
 	else if (player->weaponowned[wp_supershotgun] 
 		 && player->ammo[am_shell]>2
-		 && commercial )
+		 && (commercial) )
 	{
 	    player->pendingweapon = wp_supershotgun;
 	}
@@ -212,7 +306,7 @@ boolean P_CheckAmmo (player_t* player)
 	}
 	else if (player->weaponowned[wp_bfg]
 		 && player->ammo[am_cell]>40
-		 && !shareware )
+		 && (!shareware) )
 	{
 	    player->pendingweapon = wp_bfg;
 	}
@@ -321,7 +415,7 @@ A_WeaponReady
     
     // bob the weapon based on movement speed
     angle = (128*leveltime)&FINEMASK;
-	psp->sx = FRACUNIT + FixedMul (player->bob, finecosine[angle]);
+    psp->sx = FRACUNIT + FixedMul (player->bob, finecosine[angle]);
     angle &= FINEANGLES/2-1;
     psp->sy = WEAPONTOP + FixedMul (player->bob, finesine[angle]);
 }

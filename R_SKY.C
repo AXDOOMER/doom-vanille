@@ -1,7 +1,6 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
-// Copyright (C) 1993-2008 Raven Software
-// Copyright (C) 2015 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -19,14 +18,14 @@
 //  The default sky map is 256 columns and repeats 4 times
 //  on a 320 screen?
 //  
+//
 
 
 // Needed for FRACUNIT.
-#include "m_fixed.h"
+#include "doomdef.h"
 
 // Needed for Flat retrieval.
 #include "r_data.h"
-
 #include "r_sky.h"
 
 //

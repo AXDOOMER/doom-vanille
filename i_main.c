@@ -12,34 +12,25 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
+//
 // DESCRIPTION:
-//	Refresh (R_*) module, global header.
-//	All the rendering/drawing stuff is here.
+//  Main program, simply calls D_DoomMain high level loop.
 //
 
-#ifndef __R_LOCAL__
-#define __R_LOCAL__
-
-// Binary Angles, sine/cosine/atan lookups.
-#include "tables.h"
-
-// Screen size related parameters.
 #include "doomdef.h"
 
-// Include the refresh/render data structs.
-#include "r_data.h"
+#include "m_misc.h"
+#include "d_main.h"
 
+int
+main
+( int		argc,
+  char**	argv ) 
+{ 
+    myargc = argc; 
+    myargv = argv; 
+ 
+    D_DoomMain (); 
 
-
-//
-// Separate header file for each module.
-//
-#include "r_main.h"
-#include "r_bsp.h"
-#include "r_segs.h"
-#include "r_plane.h"
-#include "r_data.h"
-#include "r_things.h"
-#include "r_draw.h"
-
-#endif		// __R_LOCAL__
+    return 0;
+} 

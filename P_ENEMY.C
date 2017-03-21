@@ -1,7 +1,6 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
-// Copyright (C) 1993-2008 Raven Software
-// Copyright (C) 2015 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -21,7 +20,7 @@
 
 #include <stdlib.h>
 
-#include "m_random.h"
+#include "m_misc.h"
 #include "i_system.h"
 
 #include "doomdef.h"
@@ -1617,12 +1616,60 @@ void A_BossDeath (mobj_t* mo)
     }
     else
     {
-	if (gamemap != 8)
+	switch(gameepisode)
+	{
+	  case 1:
+	    if (gamemap != 8)
 		return;
 
-	if (mo->type == MT_BRUISER && gameepisode != 1)
+	    if (mo->type != MT_BRUISER)
 		return;
+	    break;
+	    
+	  case 2:
+	    if (gamemap != 8)
+		return;
+
+	    if (mo->type != MT_CYBORG)
+		return;
+	    break;
+	    
+	  case 3:
+	    if (gamemap != 8)
+		return;
+	    
+	    if (mo->type != MT_SPIDER)
+		return;
+	    
+	    break;
+	    
+	  case 4:
+	    switch(gamemap)
+	    {
+	      case 6:
+		if (mo->type != MT_CYBORG)
+		    return;
+		break;
+		
+	      case 8: 
+		if (mo->type != MT_SPIDER)
+		    return;
+		break;
+		
+	      default:
+		return;
+		break;
+	    }
+	    break;
+	    
+	  default:
+	    if (gamemap != 8)
+		return;
+	    break;
+	}
+		
     }
+
     
     // make sure there is a player alive for victory
     for (i=0 ; i<MAXPLAYERS ; i++)
@@ -1669,11 +1716,32 @@ void A_BossDeath (mobj_t* mo)
 	    }
 	}
     }
-	else if (gameepisode == 1)
+    else
     {
+	switch(gameepisode)
+	{
+	  case 1:
 	    junk.tag = 666;
 	    EV_DoFloor (&junk, lowerFloorToLowest);
 	    return;
+	    break;
+	    
+	  case 4:
+	    switch(gamemap)
+	    {
+	      case 6:
+		junk.tag = 666;
+		EV_DoDoor (&junk, blazeOpen);
+		return;
+		break;
+		
+	      case 8:
+		junk.tag = 666;
+		EV_DoFloor (&junk, lowerFloorToLowest);
+		return;
+		break;
+	    }
+	}
     }
 	
     G_ExitLevel ();
@@ -1920,7 +1988,7 @@ void A_PlayerScream (mobj_t* mo)
     // Default death sound.
     int		sound = sfx_pldeth;
 	
-    if (commercial
+    if ( commercial
 	&& 	(mo->health < -50))
     {
 	// IF THE PLAYER DIES

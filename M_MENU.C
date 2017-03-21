@@ -1,7 +1,6 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
-// Copyright (C) 1993-2008 Raven Software
-// Copyright (C) 2015 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -32,7 +31,6 @@
 #include "d_main.h"
 
 #include "i_system.h"
-#include "i_video.h"
 #include "z_zone.h"
 #include "v_video.h"
 #include "w_wad.h"
@@ -44,8 +42,7 @@
 
 #include "g_game.h"
 
-#include "m_argv.h"
-#include "m_swap.h"
+#include "m_misc.h"
 
 #include "s_sound.h"
 
@@ -71,6 +68,8 @@ int			mouseSensitivity;       // has default
 // Show messages has default, 0 = off, 1 = on
 int			showMessages;
 	
+int         sfxVolume;
+int         musicVolume;
 
 // Blocky mode, has default, 0 = high, 1 = normal
 int			detailLevel;		
@@ -108,6 +107,32 @@ char gammamsg[5][26] =
     GAMMALVL4
 };
 
+char endmsg1[NUM_QUITMESSAGES][80] =
+{
+    // DOOM1
+    QUITMSG,
+    "please don't leave, there's more\ndemons to toast!",
+    "let's beat it -- this is turning\ninto a bloodbath!",
+    "i wouldn't leave if i were you.\ndos is much worse.",
+    "you're trying to say you like dos\nbetter than me, right?",
+    "don't leave yet -- there's a\ndemon around that corner!",
+    "ya know, next time you come in here\ni'm gonna toast ya.",
+    "go ahead and leave. see if i care."
+};
+
+char endmsg2[NUM_QUITMESSAGES][80] =
+{
+    // QuitDOOM II messages
+    QUITMSG,
+    "you want to quit?\nthen, thou hast lost an eighth!",
+    "don't go now, there's a \ndimensional shambler waiting\nat the dos prompt!",
+    "get outta here and go back\nto your boring programs.",
+    "if i were your boss, i'd \n deathmatch ya in a minute!",
+    "look, bud. you leave now\nand you forfeit your body count!",
+    "just leave. when you come\nback, i'll be waiting with a bat.",
+    "you're lucky i don't smack\nyou for thinking about leaving."
+};
+
 // we are going to be entering a savegame string
 int			saveStringEnter;              
 int             	saveSlot;	// which slot to save in
@@ -126,7 +151,6 @@ char			savegamestrings[10][SAVESTRINGSIZE];
 
 char	endstring[160];
 
-int msnd_SfxVolume;
 
 //
 // MENU TYPEDEFS
@@ -204,6 +228,7 @@ void M_QuickLoad(void);
 void M_DrawMainMenu(void);
 void M_DrawReadThis1(void);
 void M_DrawReadThis2(void);
+void M_DrawReadThisRetail(void);
 void M_DrawNewGame(void);
 void M_DrawEpisode(void);
 void M_DrawOptions(void);
@@ -248,7 +273,7 @@ menuitem_t MainMenu[]=
     {1,"M_LOADG",M_LoadGame,'l'},
     {1,"M_SAVEG",M_SaveGame,'s'},
     // Another hickup with Special edition.
-    {1,"M_RDTHIS",M_ReadThis,'r'},
+    {1,"M_RDTHIS",M_ReadThis2,'r'},
     {1,"M_QUITG",M_QuitDOOM,'q'}
 };
 
@@ -271,6 +296,7 @@ enum
     ep1,
     ep2,
     ep3,
+    ep4,
     ep_end
 } episodes_e;
 
@@ -278,7 +304,8 @@ menuitem_t EpisodeMenu[]=
 {
     {1,"M_EPI1", M_Episode,'k'},
     {1,"M_EPI2", M_Episode,'t'},
-    {1,"M_EPI3", M_Episode,'i'}
+    {1,"M_EPI3", M_Episode,'i'},
+    {1,"M_EPI4", M_Episode,'t'}
 };
 
 menu_t  EpiDef =
@@ -401,9 +428,9 @@ menuitem_t ReadMenu2[]=
 menu_t  ReadDef2 =
 {
     read2_end,
-    &ReadDef1,
+    NULL,
     ReadMenu2,
-    M_DrawReadThis2,
+    M_DrawReadThisRetail,
     330,175,
     0
 };
@@ -739,24 +766,31 @@ void M_QuickLoad(void)
 
 //
 // Read This Menus
+// Had a "quick hack to fix romero bug"
 //
-
 void M_DrawReadThis1(void)
 {
-	inhelpscreens = true;
-	V_DrawPatchDirect(0, 0, 0, W_CacheLumpName("HELP2", PU_CACHE));
+    inhelpscreens = true;
+    V_DrawPatchDirect(0, 0, 0, W_CacheLumpName("HELP2", PU_CACHE));
 }
 
+
+
+//
+// Read This Menus - optional second page.
+//
+#if 0
 void M_DrawReadThis2(void)
 {
-	inhelpscreens = true;
-	V_DrawPatchDirect(0, 0, 0, W_CacheLumpName("HELP1", PU_CACHE));
+    inhelpscreens = true;
+    V_DrawPatchDirect(0, 0, 0, W_CacheLumpName("HELP1", PU_CACHE));
 }
+#endif
 
-void M_DrawReadThis(void)
+void M_DrawReadThisRetail(void)
 {
     inhelpscreens = true;
-	V_DrawPatchDirect (0,0,0,W_CacheLumpName("HELP",PU_CACHE));
+    V_DrawPatchDirect(0, 0, 0, W_CacheLumpName("HELP", PU_CACHE));
 }
 
 
@@ -768,10 +802,10 @@ void M_DrawSound(void)
     V_DrawPatchDirect (60,38,0,W_CacheLumpName("M_SVOL",PU_CACHE));
 
     M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(sfx_vol+1),
-		16, msnd_SfxVolume);
+		 16,sfxVolume);
 
     M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(music_vol+1),
-		 16,snd_MusicVolume);
+		 16,musicVolume);
 }
 
 void M_Sound(int choice)
@@ -784,16 +818,16 @@ void M_SfxVol(int choice)
     switch(choice)
     {
       case 0:
-	if (msnd_SfxVolume)
-	    msnd_SfxVolume--;
+	if (sfxVolume)
+        sfxVolume--;
 	break;
       case 1:
-	if (msnd_SfxVolume < 15)
-	    msnd_SfxVolume++;
+	if (sfxVolume < 15)
+        sfxVolume++;
 	break;
     }
 	
-    S_SetSfxVolume(msnd_SfxVolume*8);
+    S_SetSfxVolume(sfxVolume * 8);
 }
 
 void M_MusicVol(int choice)
@@ -801,16 +835,16 @@ void M_MusicVol(int choice)
     switch(choice)
     {
       case 0:
-	if (snd_MusicVolume)
-	    snd_MusicVolume--;
+	if (musicVolume)
+        musicVolume--;
 	break;
       case 1:
-	if (snd_MusicVolume < 15)
-	    snd_MusicVolume++;
+	if (musicVolume < 15)
+        musicVolume++;
 	break;
     }
 	
-    S_SetMusicVolume(snd_MusicVolume);
+    S_SetMusicVolume(musicVolume * 8);
 }
 
 
@@ -844,7 +878,7 @@ void M_NewGame(int choice)
 	return;
     }
 	
-    if (commercial)
+    if ( commercial )
 	M_SetupNextMenu(&NewDef);
     else
 	M_SetupNextMenu(&EpiDef);
@@ -884,7 +918,8 @@ void M_ChooseSkill(int choice)
 
 void M_Episode(int choice)
 {
-    if (shareware && choice)
+    if ( shareware
+	 && choice)
     {
 	M_StartMessage(SWSTRING,NULL,false);
 	M_SetupNextMenu(&ReadDef1);
@@ -913,9 +948,6 @@ void M_DrawOptions(void)
 
     V_DrawPatchDirect (OptionsDef.x + 120,OptionsDef.y+LINEHEIGHT*messages,0,
 		       W_CacheLumpName(msgNames[showMessages],PU_CACHE));
-
-    if (mouseSensitivity > 30)
-        mouseSensitivity = 30;
 
     M_DrawThermo(OptionsDef.x,OptionsDef.y+LINEHEIGHT*(mousesens+1),
 		 10,mouseSensitivity);
@@ -1056,10 +1088,8 @@ void M_QuitResponse(int ch)
 
 void M_QuitDOOM(int choice)
 {
-    // We pick index 0 which is language sensitive,
-    //  or one at random, between 1 and maximum number.
-
-    int msg = (gametic / 4) % NUM_QUITMESSAGES;
+  // We pick index 0 which is language sensitive,
+  //  or one at random, between 1 and maximum number.
     if (commercial)
     {
         if (french)
@@ -1068,14 +1098,17 @@ void M_QuitDOOM(int choice)
         }
         else
         {
-            sprintf(endstring, "%s\n\n"DOSY, endmsg2[msg]);
+            sprintf(endstring, "%s\n\n"DOSY,
+                    endmsg2[(gametic >> 2) % NUM_QUITMESSAGES]);
         }
     }
     else
     {
-        sprintf(endstring, "%s\n\n"DOSY, endmsg1[msg]);
+        sprintf(endstring, "%s\n\n"DOSY,
+                endmsg1[(gametic >> 2) % NUM_QUITMESSAGES]);
     }
-    M_StartMessage(endstring,M_QuitResponse,true);
+  
+  M_StartMessage(endstring,M_QuitResponse,true);
 }
 
 
@@ -1501,7 +1534,8 @@ boolean M_Responder (event_t* ev)
 				
 	  case KEY_F1:            // Help key
 	    M_StartControlPanel ();
-	    currentMenu = &ReadDef1;
+
+	    currentMenu = &ReadDef2;
 	    
 	    itemOn = 0;
 	    S_StartSound(NULL,sfx_swtchn);
@@ -1819,20 +1853,16 @@ void M_Init (void)
     messageLastMenuActive = menuactive;
     quickSaveSlot = -1;
 
-    // Here we could catch other version dependencies,
-    //  like HELP1/2, and four episodes.
-
-  
-    if (commercial) {
-	MainMenu[readthis] = MainMenu[quitdoom];
-	MainDef.numitems--;
-	MainDef.y += 8;
-	NewDef.prevMenu = &MainDef;
-	ReadDef1.routine = M_DrawReadThis;
-	ReadDef1.x = 330;
-	ReadDef1.y = 165;
-	ReadMenu1[0].routine = M_FinishReadThis;
+    if (commercial)
+    {
+        MainMenu[readthis] = MainMenu[quitdoom];
+        MainDef.numitems--;
+        MainDef.y += 8;
+        NewDef.prevMenu = &MainDef;
+        ReadDef1.routine = M_DrawReadThisRetail;
+        ReadDef1.x = 330;
+        ReadDef1.y = 165;
+        ReadMenu1[0].routine = M_FinishReadThis;
     }
-    
 }
 

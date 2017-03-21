@@ -1,7 +1,6 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
-// Copyright (C) 1993-2008 Raven Software
-// Copyright (C) 2015 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -17,18 +16,21 @@
 //	Handles WAD file header, directory, lump I/O.
 //
 
+
 #include <ctype.h>
+#include <sys/types.h>
 #include <string.h>
+#include <unistd.h>
 #include <malloc.h>
-#include <io.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <alloca.h>
 
 #include "doomtype.h"
-#include "m_swap.h"
+#include "doomstat.h"
 #include "i_system.h"
-#include "i_video.h"
 #include "z_zone.h"
+
 #include "w_wad.h"
 
 
@@ -45,6 +47,7 @@ lumpinfo_t*		lumpinfo;
 int			numlumps;
 
 void**			lumpcache;
+
 
 void
 ExtractFileBase
@@ -126,11 +129,11 @@ void W_AddFile (char *filename)
 		
     if ( (handle = open (filename,O_RDONLY | O_BINARY)) == -1)
     {
-	printf (" couldn't open %s\n",filename);
+	printf ("\tcouldn't open %s\n",filename);
 	return;
     }
 
-    printf (" adding %s\n",filename);
+    printf ("\tadding %s\n",filename);
     startlump = numlumps;
 	
     if (strcmpi (filename+strlen(filename)-3 , "wad" ) )
@@ -155,7 +158,7 @@ void W_AddFile (char *filename)
 			 "or PWAD id\n", filename);
 	    }
 	    
-	    // ???modifiedgame = true;		
+	    modifiedgame = true;		
 	}
 	header.numlumps = LONG(header.numlumps);
 	header.infotableofs = LONG(header.infotableofs);

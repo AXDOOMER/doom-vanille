@@ -1,7 +1,6 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
-// Copyright (C) 1993-2008 Raven Software
-// Copyright (C) 2015 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -17,9 +16,10 @@
 //	BSP traversal, handling of LineSegs for rendering.
 //
 
+
 #include "doomdef.h"
 
-#include "m_bbox.h"
+#include "m_misc.h"
 
 #include "i_system.h"
 

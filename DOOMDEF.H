@@ -1,7 +1,7 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
 // Copyright (C) 1993-2008 Raven Software
-// Copyright (C) 2015 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -30,18 +30,11 @@
 // DOOM version
 enum { VERSION =  109 };
 
-
 // If rangecheck is undefined,
 // most parameter validation debugging code will not be compiled
 #define RANGECHECK
 
 
-// This one switches between MIT SHM (no proper mouse)
-// and XFree86 DGA (mickey sampling). The original
-// linuxdoom used SHM, which is default.
-//#define X11_DGA		1
-
-/*
 //
 // For resize of screen, at start of game.
 // It will not work dynamically, see visplanes.
@@ -53,7 +46,7 @@ enum { VERSION =  109 };
 //  menues etc. is tied to the scale implied
 //  by the graphics.
 #define	SCREEN_MUL		1
-#define	INV_ASPECT_RATIO	0.625 // 0.75, ideally*/
+#define	INV_ASPECT_RATIO	0.625 // 0.75, ideally
 
 // Defines suck. C sucks.
 // C++ might sucks for OOP, but it sure is a better C.
@@ -63,7 +56,9 @@ enum { VERSION =  109 };
 #define SCREENHEIGHT 200
 //(int)(SCREEN_MUL*BASE_WIDTH*INV_ASPECT_RATIO) //200
 
-
+#define	FRACBITS		16
+#define	FRACUNIT		(1<<FRACBITS)
+typedef int fixed_t;
 
 
 // The maximum number of players, multiplayer/networking.

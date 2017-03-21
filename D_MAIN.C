@@ -1,7 +1,6 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
-// Copyright (C) 1993-2008 Raven Software
-// Copyright (C) 2015 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -14,12 +13,11 @@
 // GNU General Public License for more details.
 //
 // DESCRIPTION:
-//	DOOM main program (D_DoomMain) and game loop (D_DoomLoop),
-//	plus functions to determine game mode (shareware, registered),
-//	parse command line parameters, configure game parameters (turbo),
-//	and call the startup functions.
+//  DOOM main program (D_DoomMain) and game loop (D_DoomLoop),
+//  plus functions to determine game mode (shareware, registered),
+//  parse command line parameters, configure game parameters (turbo),
+//  and call the startup functions.
 //
-
 
 #define	BGCOLOR		15
 #define	FGCOLOR		2
@@ -44,13 +42,11 @@
 #include "f_finale.h"
 #include "f_wipe.h"
 
-#include "m_argv.h"
 #include "m_misc.h"
 #include "m_menu.h"
 
 #include "i_system.h"
 #include "i_sound.h"
-#include "i_video.h"
 
 #include "g_game.h"
 
@@ -92,8 +88,8 @@ boolean		singletics = false; // debug flag to cancel adaptiveness
 
 
 //extern int soundVolume;
-//extern  int	sfxVolume;
-//extern  int	musicVolume;
+extern  int	sfxVolume;
+extern  int	musicVolume;
 
 extern  boolean	inhelpscreens;
 
@@ -106,7 +102,14 @@ FILE*		debugfile;
 
 boolean		advancedemo;
 
+boolean	        modifiedgame;
 
+boolean         shareware;
+boolean         registered;
+boolean         commercial;
+boolean         plutonia;
+boolean         tnt;
+boolean         french;
 
 
 char		wadfile[1024];		// primary wad file
@@ -141,7 +144,6 @@ void D_PostEvent (event_t* ev)
     eventhead = (++eventhead)&(MAXEVENTS-1);
 }
 
-
 //
 // D_ProcessEvents
 // Send all the events of the given timestamp down the responder chain
@@ -151,7 +153,7 @@ void D_ProcessEvents (void)
     event_t*	ev;
 	
     // IF STORE DEMO, DO NOT ACCEPT INPUT
-    if ( commercial
+    if ( ( commercial )
 	 && (W_CheckNumForName("map01")<0) )
       return;
 	
@@ -164,8 +166,19 @@ void D_ProcessEvents (void)
     }
 }
 
+//
+// FixedDiv, C version.
+//
 
-
+fixed_t
+FixedDiv
+( fixed_t	a,
+  fixed_t	b )
+{
+    if ( (abs(a)>>14) >= abs(b))
+	return (a^b)<0 ? MININT : MAXINT;
+    return FixedDiv2 (a,b);
+}
 
 //
 // D_Display
@@ -442,13 +455,13 @@ void D_AdvanceDemo (void)
     switch (demosequence)
     {
       case 0:
-	if (commercial)
+	if ( commercial )
 	    pagetic = 35 * 11;
 	else
 	    pagetic = 170;
 	gamestate = GS_DEMOSCREEN;
 	pagename = "TITLEPIC";
-	if (commercial)
+	if ( commercial )
 	  S_StartMusic(mus_dm2ttl);
 	else
 	  S_StartMusic (mus_intro);
@@ -466,7 +479,7 @@ void D_AdvanceDemo (void)
 	break;
       case 4:
 	gamestate = GS_DEMOSCREEN;
-	if (commercial)
+	if ( commercial)
 	{
 	    pagetic = 35 * 11;
 	    pagename = "TITLEPIC";
@@ -475,11 +488,16 @@ void D_AdvanceDemo (void)
 	else
 	{
 	    pagetic = 200;
-	    pagename = "HELP2";
+
+	    pagename = "CREDIT";
 	}
 	break;
       case 5:
 	G_DeferedPlayDemo ("demo3");
+	break;
+        // THE DEFINITIVE DOOM Special Edition demo
+      case 6:
+	G_DeferedPlayDemo ("demo4");
 	break;
     }
 }
@@ -501,13 +519,13 @@ void D_StartTitle (void)
 //
 int D_GetCursorColumn(void)
 {
-	union REGS regs;
+    union REGS regs;
 
-	regs.h.ah = 3;
-	regs.h.bh = 0;
-	int386(0x10, &regs, &regs);
+    regs.h.ah = 3;
+    regs.h.bh = 0;
+    int386(0x10, &regs, &regs);
 
-	return regs.h.dl;
+    return regs.h.dl;
 }
 
 //
@@ -515,13 +533,13 @@ int D_GetCursorColumn(void)
 //
 int D_GetCursorRow(void)
 {
-	union REGS regs;
+    union REGS regs;
 
-	regs.h.ah = 3;
-	regs.h.bh = 0;
-	int386(0x10, &regs, &regs);
+    regs.h.ah = 3;
+    regs.h.bh = 0;
+    int386(0x10, &regs, &regs);
 
-	return regs.h.dh;
+    return regs.h.dh;
 }
 
 //
@@ -529,53 +547,54 @@ int D_GetCursorRow(void)
 //
 void D_SetCursorPosition(int column, int row)
 {
-	union REGS regs;
+    union REGS regs;
 
-	regs.h.ah = 2;
-	regs.h.bh = 0;
-	regs.h.dl = column;
-	regs.h.dh = row;
-	int386(0x10, &regs, &regs);
+    regs.h.dh = row;
+    regs.h.dl = column;
+    regs.h.ah = 2;
+    regs.h.bh = 0;
+    int386(0x10, &regs, &regs);
 }
 
 //
 // D_DrawTitle
 //
-void D_DrawTitle(char *string, int bc, int tc)
+void D_DrawTitle(char *string, int fc, int bc)
 {
-	int color;
-	int column;
-	int row;
-	int i;
-	union REGS regs;
+    union REGS regs;
+    byte color;
+    int column;
+    int row;
+    int i;
 
-	//Calculate text color
-	color = (tc << 4) | bc;
+    //Calculate text color
+    color = (bc << 4) | fc;
 
-	//Get column position
-	column = D_GetCursorColumn();
+    //Get column position
+    column = D_GetCursorColumn();
 
-	//Get row position
-	row = D_GetCursorRow();
+    //Get row position
+    row = D_GetCursorRow();
 
-	for (i = 0; i < strlen(string); i++)
-	{
-		//Set character
-		regs.h.al = string[i];
-		regs.h.ah = 9;
-		regs.h.bl = color;
-		regs.h.bh = 0;
-		regs.w.cx = 1;
-		int386(0x10, &regs, &regs);
+    for (i = 0; i < strlen(string); i++)
+    {
+        //Set character
+        regs.h.ah = 9;
+        regs.h.al = string[i];
+        regs.w.cx = 1;
+        regs.h.bl = color;
+        regs.h.bh = 0;
+        int386(0x10, &regs, &regs);
 
-		//Check cursor position
-		if (++column >= 80)
-			column = 0;
+        //Check cursor position
+        if (++column > 79)
+            column = 0;
 
-		//Set postition
-		D_SetCursorPosition(column, row);
-	}
+        //Set position
+        D_SetCursorPosition(column, row);
+    }
 }
+
 
 //      print title for every printed line
 char            title[128];
@@ -585,21 +604,21 @@ char            title[128];
 //
 void D_RedrawTitle(void)
 {
-	int column;
-	int row;
+    int column;
+    int row;
 
-	//Get current cursor pos
-	column = D_GetCursorColumn();
-	row = D_GetCursorRow();
+    //Get current cursor pos
+    column = D_GetCursorColumn();
+    row = D_GetCursorRow();
 
-	//Set cursor pos to zero
-	D_SetCursorPosition(0, 0);
+    //Set cursor pos to zero
+    D_SetCursorPosition(0, 0);
 
-	//Draw title
-	D_DrawTitle(title, BGCOLOR, FGCOLOR);
+    //Draw title
+    D_DrawTitle(title, FGCOLOR, BGCOLOR);
 
-	//Set old cursor pos
-	D_SetCursorPosition(column, row);
+    //Restore old cursor pos
+    D_SetCursorPosition(column, row);
 }
 
 //
@@ -628,7 +647,7 @@ void D_AddFile (char *file)
 void IdentifyVersion (void)
 {
 
-	strcpy(basedefault, "default.cfg");
+    strcpy(basedefault,"default.cfg");
     if (M_CheckParm ("-shdev"))
     {
 	registered = false;
@@ -644,6 +663,7 @@ void IdentifyVersion (void)
     if (M_CheckParm ("-regdev"))
     {
 	registered = true;
+	shareware = false;
 	devparm = true;
 	D_AddFile (DEVDATA"doom.wad");
 	D_AddFile (DEVMAPS"data_se/texture1.lmp");
@@ -657,7 +677,13 @@ void IdentifyVersion (void)
     {
 	commercial = true;
 	devparm = true;
-	D_AddFile (DEVDATA"doom2.wad");
+	if(plutonia)
+	    D_AddFile (DEVDATA"plutonia.wad");
+	else if(tnt)
+	    D_AddFile (DEVDATA"tnt.wad");
+	else
+	    D_AddFile (DEVDATA"doom2.wad");
+	    
 	D_AddFile (DEVMAPS"cdata/texture1.lmp");
 	D_AddFile (DEVMAPS"cdata/pnames.lmp");
 	strcpy (basedefault,DEVDATA"default.cfg");
@@ -671,35 +697,49 @@ void IdentifyVersion (void)
 	// Let's handle languages in config files, okay?
 	french = true;
 	printf("French version\n");
-	D_AddFile("doom2f.wad");
+	D_AddFile ("doom2f.wad");
 	return;
     }
 
     if ( !access ("doom2.wad",R_OK) )
     {
 	commercial = true;
-	D_AddFile("doom2.wad");
+	D_AddFile ("doom2.wad");
 	return;
     }
 
-	if (!access("doom.wad", R_OK))
+    if ( !access ("plutonia.wad", R_OK ) )
     {
-    registered = true;
-	D_AddFile("doom.wad");
-    return;
+      commercial = true;
+      plutonia = true;
+      D_AddFile ("plutonia.wad");
+      return;
     }
 
-	if (!access("doom1.wad", R_OK))
+    if ( !access ( "tnt.wad", R_OK ) )
     {
-    shareware = true;
-	D_AddFile("doom1.wad");
-    return;
+      commercial = true;
+      tnt = true;
+      D_AddFile ("tnt.wad");
+      return;
+    }
+
+    if ( !access ("doom.wad",R_OK) )
+    {
+      registered = true;
+      D_AddFile ("doom.wad");
+      return;
+    }
+
+    if ( !access ("doom1.wad",R_OK) )
+    {
+      shareware = true;
+      D_AddFile ("doom1.wad");
+      return;
     }
 
     printf("Game mode indeterminate.\n");
-
-    // We don't abort. Let's see what the PWAD contains.
-    //exit(1);
+    exit(1);
     //I_Error ("Game mode indeterminate\n");
 }
 
@@ -783,8 +823,8 @@ void FindResponseFile (void)
 void D_DoomMain (void)
 {
     int             p;
-	char                    file[256];
-	union REGS regs;
+    char                    file[256];
+    union REGS regs;
 
     FindResponseFile ();
 	
@@ -802,31 +842,54 @@ void D_DoomMain (void)
     else if (M_CheckParm ("-deathmatch"))
 	deathmatch = 1;
 
-	if (commercial)
-	sprintf (title,
-		 "                          "
-		 "DOOM 2: Hell on Earth v%i.%i"
-		 "                           ",
-		 VERSION/100,VERSION%100);
-	else
-	sprintf (title,
-		 "                          "
-		 "DOOM System Startup v%i.%i"
-		 "                          ",
-		 VERSION/100,VERSION%100);
+    if (!commercial)
+    {
+        sprintf(title,
+                "                         "
+                "The Ultimate DOOM Startup v%i.%i"
+                "                           ",
+                VERSION/100,VERSION%100);
+    }
+    else
+    {
+        if (plutonia)
+        {
+            sprintf(title,
+                    "                   "
+                    "DOOM 2: Plutonia Experiment v%i.%i"
+                    "                           ",
+                    VERSION/100,VERSION%100);
+        }
+        else if(tnt)
+        {
+            sprintf(title,
+                    "                     "
+                    "DOOM 2: TNT - Evilution v%i.%i"
+                    "                           ",
+                    VERSION/100,VERSION%100);
+        }
+        else
+        {
+            sprintf(title,
+                    "                         "
+                    "DOOM 2: Hell on Earth v%i.%i"
+                    "                           ",
+                    VERSION/100,VERSION%100);
+        }
+    }
+    
+    regs.w.ax = 3;
+    int386(0x10, &regs, &regs);
+    D_DrawTitle(title, FGCOLOR, BGCOLOR);
 
-	regs.w.ax = 3;
-	int386(0x10, &regs, &regs);
-	D_DrawTitle(title, BGCOLOR, FGCOLOR);
-
-	printf("\nP_Init: Checking cmd-line parameters...\n");
+    printf("\nP_Init: Checking cmd-line parameters...\n");
 
     if (devparm)
-	{
-	printf(D_DEVSTR);
-	D_RedrawTitle();
-	}
-    
+    {
+        printf(D_DEVSTR);
+        D_RedrawTitle();
+    }
+
     if (M_CheckParm("-cdrom"))
     {
 	printf(D_CDROM);
@@ -866,23 +929,24 @@ void D_DoomMain (void)
 
 	// Map name handling.
 
-	if (commercial)
-	{
-	p = atoi (myargv[p+1]);
-	if (p<10)
-	    sprintf (file,"~"DEVMAPS"cdata/map0%i.wad", p);
-	else
-	    sprintf (file,"~"DEVMAPS"cdata/map%i.wad", p);
-	}
-	else
-	{
-	sprintf (file,"~"DEVMAPS"E%cM%c.wad",
-		    myargv[p+1][0], myargv[p+2][0]);
-	printf("Warping to Episode %s, Map %s.\n",
-		myargv[p+1],myargv[p+2]);
-    }
+        if (commercial)
+        {
+	    p = atoi (myargv[p+1]);
+	    if (p<10)
+	      sprintf (file,"~"DEVMAPS"cdata/map0%i.wad", p);
+	    else
+	      sprintf (file,"~"DEVMAPS"cdata/map%i.wad", p);
+        }
+        else
+        {
+	    sprintf (file,"~"DEVMAPS"E%cM%c.wad",
+		     myargv[p+1][0], myargv[p+2][0]);
+	    printf("Warping to Episode %s, Map %s.\n",
+		   myargv[p+1],myargv[p+2]);
+        }
 	D_AddFile (file);
-	}
+    }
+	
     p = M_CheckParm ("-file");
     if (p)
     {
@@ -1010,69 +1074,67 @@ void D_DoomMain (void)
 	
 
     // Check and print which version is executed.
-
-	if (registered)
-	{
-	printf("	registered version.\n");
-	D_RedrawTitle();
-	printf (
-	    "===========================================================================\n"
-	    "              This version is NOT SHAREWARE, do not distribute!\n"
-	    "         Please report software piracy to the SPA: 1-800-388-PIR8\n"
-	    "===========================================================================\n"
-	);
-	D_RedrawTitle();
-	}
-
-	if (shareware)
-	{
-	printf("	shareware version.\n");
-	D_RedrawTitle();
-	}
-
-	if (commercial)
-	{
-	printf("	commercial version.\n");
-	D_RedrawTitle();
-	printf (
-	    "===========================================================================\n"
-	    "                            Do not distribute!\n"
-	    "         Please report software piracy to the SPA: 1-800-388-PIR8\n"
-	    "===========================================================================\n"
-	);
-	D_RedrawTitle();
-	}
+    
+    if (registered)
+    {
+        printf("\tregistered version.\n");
+        D_RedrawTitle();
+        printf(
+            "===========================================================================\n"
+            "              This version is NOT SHAREWARE, do not distribute!\n"
+            "         Please report software piracy to the SPA: 1-800-388-PIR8\n"
+            "===========================================================================\n"
+        );
+        D_RedrawTitle();
+    }
+    if (shareware)
+    {
+        printf("\tshareware version.\n");
+        D_RedrawTitle();
+    }
+    if (commercial)
+    {
+        printf("\tcommercial version.\n");
+        D_RedrawTitle();
+        printf(
+            "===========================================================================\n"
+            "                            Do not distribute!\n"
+            "         Please report software piracy to the SPA: 1-800-388-PIR8\n"
+            "===========================================================================\n"
+        );
+        D_RedrawTitle();
+    }
 
     printf ("M_Init: Init miscellaneous info.\n");
-	D_RedrawTitle();
+    D_RedrawTitle();
     M_Init ();
 
     printf ("R_Init: Init DOOM refresh daemon - ");
-	D_RedrawTitle();
+    D_RedrawTitle();
     R_Init ();
 
     printf ("\nP_Init: Init Playloop state.\n");
-	D_RedrawTitle();
+    D_RedrawTitle();
     P_Init ();
 
     printf ("I_Init: Setting up machine state.\n");
-	D_RedrawTitle();
+    D_RedrawTitle();
     I_Init ();
 
     printf ("D_CheckNetGame: Checking network game status.\n");
-	D_RedrawTitle();
+    D_RedrawTitle();
     D_CheckNetGame ();
 
     printf ("S_Init: Setting up sound.\n");
-	D_RedrawTitle();
-    S_Init (msnd_SfxVolume*8, snd_MusicVolume);
+    D_RedrawTitle();
+    S_Init (sfxVolume*8, musicVolume*8);
 
     printf ("HU_Init: Setting up heads up display.\n");
-	D_RedrawTitle();
+    D_RedrawTitle();
     HU_Init ();
 
     printf ("ST_Init: Init status bar.\n");
-	D_RedrawTitle();
+    D_RedrawTitle();
     ST_Init ();
 
     // check for a driver that wants intermission stats
@@ -1084,7 +1146,7 @@ void D_DoomMain (void)
 
 	statcopy = (void*)atoi(myargv[p+1]);
 	printf ("External statistics registered.\n");
-	D_RedrawTitle();
+        D_RedrawTitle();
     }
     
     // start the apropriate game based on parms

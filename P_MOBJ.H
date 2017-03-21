@@ -1,7 +1,6 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
-// Copyright (C) 1993-2008 Raven Software
-// Copyright (C) 2015 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -17,12 +16,13 @@
 //	Map Objects, MObj, definition and handling.
 //
 
+
 #ifndef __P_MOBJ__
 #define __P_MOBJ__
 
 // Basics.
 #include "tables.h"
-#include "m_fixed.h"
+#include "doomdef.h"
 
 // We need the thinker_t stuff.
 #include "d_think.h"
@@ -35,6 +35,8 @@
 //  tied to animation frames.
 // Needs precompiled tables/data structures.
 #include "info.h"
+
+
 
 //
 // NOTES: mobj_t

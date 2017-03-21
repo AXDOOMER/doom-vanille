@@ -1,7 +1,6 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
-// Copyright (C) 1993-2008 Raven Software
-// Copyright (C) 2015 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -19,17 +18,15 @@
 //	Functions to blit a block to the screen.
 //
 
-#include <conio.h>
 
+#include <conio.h>
 #include "i_system.h"
-#include "i_video.h"
 #include "r_local.h"
 
 #include "doomdef.h"
 #include "doomdata.h"
 
-#include "m_bbox.h"
-#include "m_swap.h"
+#include "m_misc.h"
 
 #include "v_video.h"
 
@@ -126,7 +123,24 @@ byte gammatable[5][256] =
      251,252,252,253,254,254,255,255}
 };
 
+ 
+#define SC_INDEX                0x3C4
+#define SC_RESET                0
+#define SC_CLOCK                1
+#define SC_MAPMASK              2
+#define SC_CHARMAP              3
+#define SC_MEMMODE              4
 
+#define GC_INDEX                0x3CE
+#define GC_SETRESET             0
+#define GC_ENABLESETRESET 1
+#define GC_COLORCOMPARE 2
+#define GC_DATAROTATE   3
+#define GC_READMAP              4
+#define GC_MODE                 5
+#define GC_MISCELLANEOUS 6
+#define GC_COLORDONTCARE 7
+#define GC_BITMASK              8
 
 int	usegamma;
 			 

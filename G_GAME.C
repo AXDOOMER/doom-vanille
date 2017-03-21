@@ -1,7 +1,7 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
 // Copyright (C) 1993-2008 Raven Software
-// Copyright (C) 2015 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -24,10 +24,8 @@
 
 #include "z_zone.h"
 #include "f_finale.h"
-#include "m_argv.h"
 #include "m_misc.h"
 #include "m_menu.h"
-#include "m_random.h"
 #include "i_system.h"
 
 #include "p_setup.h"
@@ -206,7 +204,8 @@ int		bodyqueslot;
  
 void*		statcopy;				// for statistics driver
  
- 
+extern int      isCyberPresent;                         // is CyberMan present?
+void I_ReadCyberCmd(ticcmd_t *cmd);
  
 int G_CmdChecksum (ticcmd_t* cmd) 
 { 
@@ -244,9 +243,11 @@ void G_BuildTiccmd (ticcmd_t* cmd)
     cmd->consistancy = 
 	consistancy[consoleplayer][maketic%BACKUPTICS]; 
 
-    //if (isCyberPresent)
-    //I_ReadCyberCmd (cmd);
-
+    if (isCyberPresent)
+    {
+        I_ReadCyberCmd(cmd);
+    }
+ 
     strafe = gamekeydown[key_strafe] || mousebuttons[mousebstrafe] 
 	|| joybuttons[joybstrafe]; 
     speed = gamekeydown[key_speed] || joybuttons[joybspeed];
@@ -440,16 +441,9 @@ void G_DoLoadLevel (void)
 { 
     int             i; 
 
-    // Set the sky map.
-    // First thing, we have a dummy sky texture name,
-    //  a flat. The data is in the WAD only because
-    //  we look for an actual index, instead of simply
-    //  setting one.
-    skyflatnum = R_FlatNumForName ( SKYFLATNAME );
-
     // DOOM determines the sky texture to be used
     // depending on the current episode, and the game version.
-    if (commercial)
+    if ( commercial )
     {
 	skytexture = R_TextureNumForName ("SKY3");
 	if (gamemap < 12)
@@ -744,7 +738,7 @@ void G_Ticker (void)
 // PLAYER STRUCTURE FUNCTIONS
 // also see P_SpawnPlayer in P_Things
 //
-
+/*
 //
 // G_InitPlayer 
 // Called at the start.
@@ -761,7 +755,7 @@ void G_InitPlayer (int player)
     G_PlayerReborn (player); 
 	 
 } 
- 
+ */
  
 
 //
@@ -1001,7 +995,7 @@ void G_ExitLevel (void)
 void G_SecretExitLevel (void) 
 { 
     // IF NO WOLF3D LEVELS, NO SECRET EXIT!
-    if (commercial
+    if ( (commercial)
       && (W_CheckNumForName("map31")<0))
 	secretexit = false;
     else
@@ -1033,6 +1027,25 @@ void G_DoCompleted (void)
 		players[i].didsecret = true; 
 	    break;
 	}
+		
+#if 0
+    if ( (gamemap == 8)
+	 && (!commercial) ) 
+    {
+	// victory 
+	gameaction = ga_victory; 
+	return; 
+    } 
+	 
+    if ( (gamemap == 9)
+	 && (!commercial) ) 
+    {
+	// exit secret level 
+	for (i=0 ; i<MAXPLAYERS ; i++) 
+	    players[i].didsecret = true; 
+    } 
+#endif
+    
 	 
     wminfo.didsecret = players[consoleplayer].didsecret; 
     wminfo.epsd = gameepisode -1; 
@@ -1073,6 +1086,9 @@ void G_DoCompleted (void)
 	      case 3: 
 		wminfo.next = 6; 
 		break; 
+	      case 4:
+		wminfo.next = 2;
+		break;
 	    }                
 	} 
 	else 
@@ -1083,7 +1099,7 @@ void G_DoCompleted (void)
     wminfo.maxitems = totalitems; 
     wminfo.maxsecret = totalsecret; 
     wminfo.maxfrags = 0; 
-    if (commercial)
+    if ( commercial )
 	wminfo.partime = 35*cpars[gamemap-1]; 
     else
 	wminfo.partime = 35*pars[gameepisode][gamemap]; 
@@ -1121,7 +1137,7 @@ void G_WorldDone (void)
     if (secretexit) 
 	players[consoleplayer].didsecret = true; 
 
-    if (commercial)
+    if ( commercial )
     {
 	switch (gamemap)
 	{
@@ -1183,7 +1199,7 @@ void G_DoLoadGame (void)
     // skip the description field 
     memset (vcheck,0,sizeof(vcheck)); 
     sprintf (vcheck,"version %i",VERSION); 
-    if (strcmp (save_p, vcheck)) 
+    if (strcmp ((char*)save_p, vcheck)) 
 	return;				// bad version 
     save_p += VERSIONSIZE; 
 			 
@@ -1350,22 +1366,21 @@ G_InitNew
 	skill = sk_nightmare;
 
 
-    // This was quite messy with SPECIAL and commented parts.
-    // Supposedly hacks to make the latest edition work.
-    // It might not work properly.
-    if (episode < 1)
-      episode = 1; 
+    if (episode == 0)
+    {
+        episode = 4;
+    }
 
-    if (episode > 3)
-	  episode = 3;
-    
-	if ((episode > 1) && shareware)
-	  episode = 1;
-  
+    if (episode > 1 && shareware)
+    {
+        episode = 1;
+    }
+
     if (map < 1) 
 	map = 1;
     
-    if ( (map > 9) && !commercial)
+    if ( (map > 9)
+	 && (!commercial) )
       map = 9; 
 		 
     M_ClearRandom (); 
@@ -1429,6 +1444,9 @@ G_InitNew
 	    break; 
 	  case 3: 
 	    skytexture = R_TextureNumForName ("SKY3"); 
+	    break; 
+	  case 4:	// Special Edition sky
+	    skytexture = R_TextureNumForName ("SKY4");
 	    break;
 	} 
  
@@ -1542,9 +1560,7 @@ void G_DoPlayDemo (void)
     demobuffer = demo_p = W_CacheLumpName (defdemoname, PU_STATIC); 
     if ( *demo_p++ != VERSION)
     {
-      fprintf( stderr, "Demo is from a different game version!\n");
-      gameaction = ga_nothing;
-      return;
+      I_Error("Demo is from a different game version!");
     }
     
     skill = *demo_p++; 

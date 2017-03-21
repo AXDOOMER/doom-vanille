@@ -1,7 +1,6 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
-// Copyright (C) 1993-2008 Raven Software
-// Copyright (C) 2015 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -17,6 +16,7 @@
 //	Handling interactions (i.e., collisions).
 //
 
+
 // Data.
 #include "doomdef.h"
 #include "dstrings.h"
@@ -24,7 +24,7 @@
 
 #include "doomstat.h"
 
-#include "m_random.h"
+#include "m_misc.h"
 #include "i_system.h"
 
 #include "am_map.h"
@@ -879,11 +879,9 @@ P_DamageMobj
 	return;
     }
 
-    if (P_Random () < target->info->painchance)
+    if ( (P_Random () < target->info->painchance)
+	 && !(target->flags&MF_SKULLFLY) )
     {
-	if (target->flags&MF_SKULLFLY)
-		target->flags &= ~MF_SKULLFLY;
-	
 	target->flags |= MF_JUSTHIT;	// fight back!
 	
 	P_SetMobjState (target, target->info->painstate);

@@ -49,6 +49,9 @@ void MPU_SetCard(int port);
 int DMX_Init(int rate, int maxsng, int mdev, int sdev);
 void DMX_DeInit(void);
 void WAV_PlayMode(int channels, int samplerate);
+int CODEC_Detect(int *a, int *b);
+int ENS_Detect(void);
+
 
 #define AHW_PC_SPEAKER 1
 #define AHW_ADLIB 2
@@ -57,5 +60,7 @@ void WAV_PlayMode(int channels, int samplerate);
 #define AHW_MPU_401 16
 #define AHW_ULTRA_SOUND 32
 #define AHW_MEDIA_VISION 64
+#define AHW_ENSONIQ 256
+#define AHW_CODEC 512
 
 #endif

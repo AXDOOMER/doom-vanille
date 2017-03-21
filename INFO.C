@@ -1,7 +1,6 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
-// Copyright (C) 1993-2008 Raven Software
-// Copyright (C) 2015 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -21,7 +20,7 @@
 
 // Data.
 #include "sounds.h"
-#include "m_fixed.h"
+#include "doomdef.h"
 
 #include "info.h"
 
@@ -1585,7 +1584,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
 	50,		// mass
 	3,		// damage
 	sfx_dmact,		// activesound
-	MF_SOLID|MF_SHOOTABLE|MF_FLOAT|MF_NOGRAVITY|MF_COUNTKILL,		// flags
+	MF_SOLID|MF_SHOOTABLE|MF_FLOAT|MF_NOGRAVITY,		// flags
 	S_NULL		// raisestate
     },
 

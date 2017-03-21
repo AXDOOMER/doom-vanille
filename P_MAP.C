@@ -1,7 +1,6 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
-// Copyright (C) 1993-2008 Raven Software
-// Copyright (C) 2015 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -20,8 +19,7 @@
 
 #include <stdlib.h>
 
-#include "m_bbox.h"
-#include "m_random.h"
+#include "m_misc.h"
 #include "i_system.h"
 
 #include "doomdef.h"
@@ -271,15 +269,12 @@ boolean PIT_CheckThing (mobj_t* thing)
 	
 	P_DamageMobj (thing, tmthing, tmthing, damage);
 	
-	if (thing->health <= 0)
-	{
-	    tmthing->flags &= ~MF_SKULLFLY;
-	    tmthing->momx = tmthing->momy = tmthing->momz = 0;
+	tmthing->flags &= ~MF_SKULLFLY;
+	tmthing->momx = tmthing->momy = tmthing->momz = 0;
 	
-	    P_SetMobjState (tmthing, tmthing->info->spawnstate);
+	P_SetMobjState (tmthing, tmthing->info->spawnstate);
 	
-	    return false;		// stop moving
-	}
+	return false;		// stop moving
     }
 
     
@@ -956,7 +951,7 @@ boolean PTR_ShootTraverse (intercept_t* in)
 		return false;
 	    
 	    // it's a sky hack wall
-	    if	(li->backsector && li->backsector->ceilingpic == skyflatnum && z > li->backsector->ceilingheight)
+	    if	(li->backsector && li->backsector->ceilingpic == skyflatnum)
 		return false;		
 	}
 

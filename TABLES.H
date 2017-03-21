@@ -1,7 +1,6 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
-// Copyright (C) 1993-2008 Raven Software
-// Copyright (C) 2015 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -28,7 +27,8 @@
 //
 //	int tantoangle[2049]	- ArcTan LUT,
 //	  maps tan(angle) to angle fast. Gotta search.	
-//
+//    
+//-----------------------------------------------------------------------------
 
 
 #ifndef __TABLES__
@@ -38,7 +38,7 @@
 #define PI				3.141592657
 
 
-#include "m_fixed.h"
+#include "doomdef.h"
 	
 #define FINEANGLES		8192
 #define FINEMASK		(FINEANGLES-1)

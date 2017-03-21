@@ -1,7 +1,6 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
-// Copyright (C) 1993-2008 Raven Software
-// Copyright (C) 2015 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -29,30 +28,11 @@
 //	int tantoangle[2049]	- ArcTan LUT,
 //	  maps tan(angle) to angle fast. Gotta search.
 //	
-//    
+//
+
+
 
 #include "tables.h"
-
-
-
-
-int
-SlopeDiv
-( unsigned	num,
-  unsigned	den)
-{
-    unsigned 	ans;
-    
-    if (den < 512)
-	return SLOPERANGE;
-
-    ans = (num<<3)/(den>>8);
-
-    return ans <= SLOPERANGE ? ans : SLOPERANGE;
-}
-
-
-
 
 int finetangent[4096] =
 {

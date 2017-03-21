@@ -1,7 +1,5 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
-// Copyright (C) 1993-2008 Raven Software
-// Copyright (C) 2015 Alexey Khokholov (Nuke.YKT)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -17,12 +15,12 @@
 //	Refresh of things, i.e. objects represented by sprites.
 //
 
+
 #include <stdio.h>
 #include <stdlib.h>
 
 
 #include "doomdef.h"
-#include "m_swap.h"
 
 #include "i_system.h"
 #include "z_zone.h"

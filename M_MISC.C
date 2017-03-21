@@ -1,7 +1,6 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
-// Copyright (C) 1993-2008 Raven Software
-// Copyright (C) 2015 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -32,13 +31,9 @@
 
 #include "z_zone.h"
 
-#include "m_swap.h"
-#include "m_argv.h"
-
 #include "w_wad.h"
 
 #include "i_system.h"
-#include "i_video.h"
 #include "v_video.h"
 
 #include "hu_stuff.h"
@@ -50,6 +45,10 @@
 #include "dstrings.h"
 
 #include "m_misc.h"
+
+
+int		myargc;
+char**		myargv;
 
 //
 // M_DrawText
@@ -91,8 +90,94 @@ M_DrawText
     return x;
 }
 
+//
+// M_CheckParm
+// Checks for the given parameter
+// in the program's command line arguments.
+// Returns the argument number (1 to argc-1)
+// or 0 if not present
+int M_CheckParm (char *check)
+{
+    int		i;
+
+    for (i = 1;i<myargc;i++)
+    {
+	if ( !strcasecmp(check, myargv[i]) )
+	    return i;
+    }
+
+    return 0;
+}
 
 
+//
+// M_Random
+// Returns a 0-255 number
+//
+unsigned char rndtable[256] = {
+    0,   8, 109, 220, 222, 241, 149, 107,  75, 248, 254, 140,  16,  66 ,
+    74,  21, 211,  47,  80, 242, 154,  27, 205, 128, 161,  89,  77,  36 ,
+    95, 110,  85,  48, 212, 140, 211, 249,  22,  79, 200,  50,  28, 188 ,
+    52, 140, 202, 120,  68, 145,  62,  70, 184, 190,  91, 197, 152, 224 ,
+    149, 104,  25, 178, 252, 182, 202, 182, 141, 197,   4,  81, 181, 242 ,
+    145,  42,  39, 227, 156, 198, 225, 193, 219,  93, 122, 175, 249,   0 ,
+    175, 143,  70, 239,  46, 246, 163,  53, 163, 109, 168, 135,   2, 235 ,
+    25,  92,  20, 145, 138,  77,  69, 166,  78, 176, 173, 212, 166, 113 ,
+    94, 161,  41,  50, 239,  49, 111, 164,  70,  60,   2,  37, 171,  75 ,
+    136, 156,  11,  56,  42, 146, 138, 229,  73, 146,  77,  61,  98, 196 ,
+    135, 106,  63, 197, 195,  86,  96, 203, 113, 101, 170, 247, 181, 113 ,
+    80, 250, 108,   7, 255, 237, 129, 226,  79, 107, 112, 166, 103, 241 ,
+    24, 223, 239, 120, 198,  58,  60,  82, 128,   3, 184,  66, 143, 224 ,
+    145, 224,  81, 206, 163,  45,  63,  90, 168, 114,  59,  33, 159,  95 ,
+    28, 139, 123,  98, 125, 196,  15,  70, 194, 253,  54,  14, 109, 226 ,
+    71,  17, 161,  93, 186,  87, 244, 138,  20,  52, 123, 251,  26,  36 ,
+    17,  46,  52, 231, 232,  76,  31, 221,  84,  37, 216, 165, 212, 106 ,
+    197, 242,  98,  43,  39, 175, 254, 145, 190,  84, 118, 222, 187, 136 ,
+    120, 163, 236, 249
+};
+
+int	rndindex = 0;
+int	prndindex = 0;
+
+// Which one is deterministic?
+int P_Random (void)
+{
+    prndindex = (prndindex+1)&0xff;
+    return rndtable[prndindex];
+}
+
+int M_Random (void)
+{
+    rndindex = (rndindex+1)&0xff;
+    return rndtable[rndindex];
+}
+
+void M_ClearRandom (void)
+{
+    rndindex = prndindex = 0;
+}
+
+void M_ClearBox (fixed_t *box)
+{
+    box[BOXTOP] = box[BOXRIGHT] = MININT;
+    box[BOXBOTTOM] = box[BOXLEFT] = MAXINT;
+}
+
+void
+M_AddToBox
+( fixed_t*	box,
+  fixed_t	x,
+  fixed_t	y )
+{
+    if (x<box[BOXLEFT])
+	box[BOXLEFT] = x;
+    else if (x>box[BOXRIGHT])
+	box[BOXRIGHT] = x;
+    if (y<box[BOXBOTTOM])
+	box[BOXBOTTOM] = y;
+    else if (y>box[BOXTOP])
+	box[BOXTOP] = y;
+}
 
 //
 // M_WriteFile
@@ -195,15 +280,16 @@ extern int	screenblocks;
 
 extern int	showMessages;
 
-extern int	numChannels;
-extern int snd_DesiredMusicDevice, snd_DesiredSfxDevice;
-extern int snd_MusicDevice, // current music card # (index to dmxCodes)
-	snd_SfxDevice; // current sfx card # (index to dmxCodes)
+// machine-independent sound params
+extern	int	numChannels;
 
-extern int     snd_SBport, snd_SBirq, snd_SBdma;       // sound blaster variables
-extern int     snd_Mport;                              // midi variables
+extern int sfxVolume;
+extern int musicVolume;
+extern int snd_SBport, snd_SBirq, snd_SBdma;
+extern int snd_Mport;
 
 extern char*	chat_macros[];
+
 
 
 typedef struct
@@ -225,27 +311,55 @@ typedef struct
 #define SC_SPACE                0x39
 #define SC_COMMA                0x33
 #define SC_PERIOD               0x34
-#define SC_PAGEUP				0x49
-#define SC_INSERT				0x52
-#define SC_HOME					0x47
-#define SC_PAGEDOWN				0x51
-#define SC_DELETE				0x53
-#define SC_END					0x4f
-#define SC_ENTER				0x1c
+#define SC_PAGEUP               0x49
+#define SC_INSERT               0x52
+#define SC_HOME                 0x47
+#define SC_PAGEDOWN             0x51
+#define SC_DELETE               0x53
+#define SC_END                  0x4f
+#define SC_ENTER                0x1c
+
+#define SC_KEY_A                0x1e
+#define SC_KEY_B                0x30
+#define SC_KEY_C                0x2e
+#define SC_KEY_D                0x20
+#define SC_KEY_E                0x12
+#define SC_KEY_F                0x21
+#define SC_KEY_G                0x22
+#define SC_KEY_H                0x23
+#define SC_KEY_I                0x17
+#define SC_KEY_J                0x24
+#define SC_KEY_K                0x25
+#define SC_KEY_L                0x26
+#define SC_KEY_M                0x32
+#define SC_KEY_N                0x31
+#define SC_KEY_O                0x18
+#define SC_KEY_P                0x19
+#define SC_KEY_Q                0x10
+#define SC_KEY_R                0x13
+#define SC_KEY_S                0x1f
+#define SC_KEY_T                0x14
+#define SC_KEY_U                0x16
+#define SC_KEY_V                0x2f
+#define SC_KEY_W                0x11
+#define SC_KEY_X                0x2d
+#define SC_KEY_Y                0x15
+#define SC_KEY_Z                0x2c
+#define SC_BACKSPACE            0x0e
 
 default_t	defaults[] =
 {
     {"mouse_sensitivity",&mouseSensitivity, 5},
-    {"sfx_volume",&msnd_SfxVolume, 8},
-    {"music_volume",&snd_MusicVolume, 8},
+    {"sfx_volume",&sfxVolume, 8},
+    {"music_volume",&musicVolume, 8},
     {"show_messages",&showMessages, 1},
     
     {"key_right",&key_right, SC_RIGHTARROW, 1},
     {"key_left",&key_left, SC_LEFTARROW, 1},
     {"key_up",&key_up, SC_UPARROW, 1},
     {"key_down",&key_down, SC_DOWNARROW, 1},
-    {"key_strafeleft",&key_strafeleft, SC_PERIOD, 1},
-    {"key_straferight",&key_straferight, SC_COMMA, 1},
+    {"key_strafeleft",&key_strafeleft, SC_COMMA, 1},
+    {"key_straferight",&key_straferight, SC_PERIOD, 1},
 
     {"key_fire",&key_fire, SC_RCTRL, 1},
     {"key_use",&key_use, SC_SPACE, 1},
@@ -265,14 +379,14 @@ default_t	defaults[] =
 
     {"screenblocks",&screenblocks, 9},
     {"detaillevel",&detailLevel, 0},
-	
-	{"snd_channels", &numChannels, 3 },
-	{"snd_musicdevice", &snd_DesiredMusicDevice, 0 },
-	{"snd_sfxdevice", &snd_DesiredSfxDevice, 0 },
-	{"snd_sbport", &snd_SBport, 544 },
-	{"snd_sbirq", &snd_SBirq, -1 },
-	{"snd_sbdma", &snd_SBdma, -1 },
-	{"snd_mport", &snd_Mport, -1 },
+
+    {"snd_channels",&numChannels, 3},
+    {"snd_sfxdevice",&snd_DesiredSfxDevice, 0},
+    {"snd_musicdevice",&snd_DesiredMusicDevice, 0},
+    {"snd_sbport",&snd_SBport, 0x220},
+    {"snd_sbirq",&snd_SBirq, 5},
+    {"snd_sbdma",&snd_SBdma, 1},
+    {"snd_mport",&snd_Mport, 0x330},
 
     {"usegamma",&usegamma, 0},
 
@@ -308,8 +422,9 @@ void M_SaveDefaults (void)
 		
     for (i=0 ; i<numdefaults ; i++)
     {
-		if (defaults[i].scantranslate)
-			defaults[i].location = &defaults[i].untranslated;
+        if (defaults[i].scantranslate)
+            defaults[i].location = &defaults[i].untranslated;
+
 	if (defaults[i].defaultvalue > -0xfff
 	    && defaults[i].defaultvalue < 0xfff)
 	{
@@ -392,16 +507,17 @@ void M_LoadDefaults (void)
 	}
 		
 	fclose (f);
-	}
-	for (i = 0; i < numdefaults; i++)
-	{
-		if (defaults[i].scantranslate)
-		{
-			parm = *defaults[i].location;
-			defaults[i].untranslated = parm;
-			*defaults[i].location = scantokey[parm];
-		}
-	}
+    }
+
+    for (i = 0; i < numdefaults; i++)
+    {
+        if (defaults[i].scantranslate)
+        {
+            parm = *defaults[i].location;
+            defaults[i].untranslated = parm;
+            *defaults[i].location = scantokey[parm];
+        }
+    }
 }
 
 

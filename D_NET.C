@@ -1,7 +1,6 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
-// Copyright (C) 1993-2008 Raven Software
-// Copyright (C) 2015 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -14,14 +13,12 @@
 // GNU General Public License for more details.
 //
 // DESCRIPTION:
-//	DOOM Network game communication and protocol,
-//	all OS independend parts.
+//  DOOM Network game communication and protocol,
+//  all OS independend parts.
 //
 
 #include "m_menu.h"
 #include "i_system.h"
-#include "i_video.h"
-#include "i_net.h"
 #include "g_game.h"
 #include "doomdef.h"
 #include "doomstat.h"

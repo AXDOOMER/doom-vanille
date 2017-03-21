@@ -1,7 +1,6 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
-// Copyright (C) 1993-2008 Raven Software
-// Copyright (C) 2015 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -15,7 +14,6 @@
 //
 // DESCRIPTION:
 //
-//
 
 #ifndef __D_PLAYER__
 #define __D_PLAYER__
@@ -25,7 +23,6 @@
 // of other structs: items (internal inventory),
 // animation states (closely tied to the sprites
 // used to represent them, unfortunately).
-#include "d_items.h"
 #include "p_pspr.h"
 
 // In addition, the player is just a special
@@ -36,6 +33,8 @@
 // is buffered within the player data struct,
 // as commands per game tick.
 #include "d_ticcmd.h"
+
+
 
 
 //

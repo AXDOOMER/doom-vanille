@@ -1,7 +1,6 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
-// Copyright (C) 1993-2008 Raven Software
-// Copyright (C) 2015 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -21,8 +20,7 @@
 
 #include "z_zone.h"
 
-#include "m_random.h"
-#include "m_swap.h"
+#include "m_misc.h"
 
 #include "i_system.h"
 
@@ -796,7 +794,7 @@ void WI_drawShowNextLoc(void)
     }
 
     // draws which level you are entering..
-    if (!commercial
+    if ( (!commercial)
 	 || wbs->next != 30)
 	WI_drawEL();  
 
@@ -1539,6 +1537,9 @@ void WI_loadData(void)
 	strcpy(name, "INTERPIC");
     else 
 	sprintf(name, "WIMAP%d", wbs->epsd);
+    
+    if (wbs->epsd == 3)
+	strcpy(name,"INTERPIC");
 
     // background
     bg = W_CacheLumpName(name, PU_CACHE);    
@@ -1546,7 +1547,7 @@ void WI_loadData(void)
 
 
     // UNUSED unsigned char *pic = screens[1];
-    // if (gamemode == commercial)
+    // if (commercial)
     // {
     // darken the background image
     // while (pic != screens[1] + SCREENHEIGHT*SCREENWIDTH)
@@ -1778,7 +1779,14 @@ void WI_Drawer (void)
 	break;
     }
 }
-
+#define RANGECHECKING
+#define RNGCHECK(v,l,h) \
+{ \
+    if((v) < (l) || (v) > (h)) \
+    { \
+        I_Error("%s=%d in %s:%d", #v, (v), __FILE__, __LINE__); \
+    } \
+};
 
 void WI_initVariables(wbstartstruct_t* wbstartstruct)
 {
@@ -1788,12 +1796,9 @@ void WI_initVariables(wbstartstruct_t* wbstartstruct)
 #ifdef RANGECHECKING
     if (!commercial)
     {
-	RNGCHECK(wbs->epsd, 0, 2);
-    }
-    else
-    {
-	RNGCHECK(wbs->last, 0, 8);
-	RNGCHECK(wbs->next, 0, 8);
+        RNGCHECK(wbs->epsd, 0, 3);
+        RNGCHECK(wbs->last, 0, 8);
+        RNGCHECK(wbs->next, 0, 8);
     }
     RNGCHECK(wbs->pnum, 0, MAXPLAYERS);
     RNGCHECK(wbs->pnum, 0, MAXPLAYERS);
@@ -1813,9 +1818,6 @@ void WI_initVariables(wbstartstruct_t* wbstartstruct)
 
     if (!wbs->maxsecret)
 	wbs->maxsecret = 1;
-
-    if (wbs->epsd > 2)
-	wbs->epsd -= 3;
 }
 
 void WI_Start(wbstartstruct_t* wbstartstruct)

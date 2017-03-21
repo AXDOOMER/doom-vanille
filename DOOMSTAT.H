@@ -1,7 +1,6 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
-// Copyright (C) 1993-2008 Raven Software
-// Copyright (C) 2015 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -35,6 +34,7 @@
 #include "d_player.h"
 
 
+
 // ------------------------
 // Command line parameters.
 //
@@ -45,22 +45,8 @@ extern  boolean	fastparm;	// checkparm of -fast
 extern  boolean	devparm;	// DEBUG: launched with -devparm
 
 
-
-// -----------------------------------------------------
-// Game Mode - identify IWAD as shareware, retail etc.
-//
-extern boolean	commercial;
-extern boolean	shareware;
-extern boolean	registered;
-
 // Set if homebrew PWAD stuff has been added.
 extern  boolean	modifiedgame;
-
-
-// -------------------------------------------
-// Language.
-extern  boolean french;
-
 
 // -------------------------------------------
 // Selected skill type, map etc.
@@ -77,6 +63,14 @@ extern  boolean		autostart;
 extern  skill_t         gameskill;
 extern  int		gameepisode;
 extern  int		gamemap;
+
+extern  boolean         shareware;
+extern  boolean         registered;
+extern  boolean         commercial;
+extern  boolean         plutonia;
+extern  boolean         tnt;
+extern  boolean         french;
+
 
 // Nightmare mode flag, single player.
 extern  boolean         respawnmonsters;
@@ -99,8 +93,6 @@ extern  boolean	deathmatch;
 //  Sound FX volume has default, 0 - 15
 //  Music volume has default, 0 - 15
 // These are multiplied by 8.
-extern int msnd_SfxVolume;      // maximum volume for sound
-extern int snd_MusicVolume;    // maximum volume for music
 
 // Current music/sfx card - index useless
 //  w/o a reference LUT in a sound module.

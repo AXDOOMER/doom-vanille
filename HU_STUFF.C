@@ -1,7 +1,6 @@
 //
 // Copyright (C) 1993-1996 Id Software, Inc.
-// Copyright (C) 1993-2008 Raven Software
-// Copyright (C) 2015 Alexey Khokholov (Nuke.YKT)
+// Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -21,8 +20,6 @@
 #include "doomdef.h"
 
 #include "z_zone.h"
-
-#include "m_swap.h"
 
 #include "hu_stuff.h"
 #include "hu_lib.h"
@@ -137,6 +134,16 @@ char*	mapnames[] =	// DOOM shareware/registered/retail (Ultimate) names.
     HUSTR_E3M7,
     HUSTR_E3M8,
     HUSTR_E3M9,
+
+    HUSTR_E4M1,
+    HUSTR_E4M2,
+    HUSTR_E4M3,
+    HUSTR_E4M4,
+    HUSTR_E4M5,
+    HUSTR_E4M6,
+    HUSTR_E4M7,
+    HUSTR_E4M8,
+    HUSTR_E4M9,
 
     "NEWLEVEL",
     "NEWLEVEL",
@@ -426,10 +433,25 @@ void HU_Start(void)
 		       hu_font,
 		       HU_FONTSTART);
     
-	if (commercial)
-    s = HU_TITLE2;
+    if (commercial)
+    {
+        if (plutonia)
+        {
+            s = HU_TITLEP;
+        }
+        else if (tnt)
+        {
+            s = HU_TITLET;
+        }
+        else
+        {
+            s = HU_TITLE2;
+        }
+    }
     else
-    s = HU_TITLE;
+    {
+        s = HU_TITLE;
+    }
     
     while (*s)
 	HUlib_addCharToTextLine(&w_title, *(s++));
@@ -527,7 +549,7 @@ void HU_Ticker(void)
 			    message_nottobefuckedwith = true;
 			    message_on = true;
 			    message_counter = HU_MSGTIMEOUT;
-			    if (commercial)
+			    if ( commercial )
 			      S_StartSound(0, sfx_radio);
 			    else
 			      S_StartSound(0, sfx_tink);

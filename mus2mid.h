@@ -1,6 +1,7 @@
 //
-// Copyright (C) 1993-1996 Id Software, Inc.
-// Copyright (C) 2016-2017 Alexey Khokholov (Nuke.YKT)
+// Copyright(C) 1993-1996 Id Software, Inc.
+// Copyright(C) 2005-2014 Simon Howard
+// Copyright(C) 2006 Ben Ryves 2006
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -12,16 +13,14 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// DESCRIPTION:
 //
-//
+// mus2mid.h - Ben Ryves 2006 - http://benryves.com - benryves@benryves.com
+// Use to convert a MUS file into a single track, type 0 MIDI file.
 
+#ifndef MUS2MID_H
+#define MUS2MID_H
 
-#ifndef __P_INTER__
-#define __P_INTER__
+int mus2mid(FILE *musinput, FILE *midioutput);
 
-boolean	P_GivePower(player_t*, int);
+#endif /* #ifndef MUS2MID_H */
 
-
-
-#endif
