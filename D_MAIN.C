@@ -106,6 +106,7 @@ boolean	        modifiedgame;
 
 boolean         shareware;
 boolean         registered;
+boolean         retail;
 boolean         commercial;
 boolean         plutonia;
 boolean         tnt;
@@ -164,20 +165,6 @@ void D_ProcessEvents (void)
 	    continue;               // menu ate the event
 	G_Responder (ev);
     }
-}
-
-//
-// FixedDiv, C version.
-//
-
-fixed_t
-FixedDiv
-( fixed_t	a,
-  fixed_t	b )
-{
-    if ( (abs(a)>>14) >= abs(b))
-	return (a^b)<0 ? MININT : MAXINT;
-    return FixedDiv2 (a,b);
 }
 
 //
@@ -838,12 +825,14 @@ void D_DoomMain (void)
 	deathmatch = 2;
     else if (M_CheckParm ("-deathmatch"))
 	deathmatch = 1;
+    else if (M_CheckParm ("-dm3"))
+	deathmatch = 3;
 
     if (!commercial)
     {
         sprintf(title,
                 "                         "
-                "The Ultimate DOOM Startup v%i.%i"
+                "DOOM System Startup v%i.%i"
                 "                           ",
                 VERSION/100,VERSION%100);
     }
@@ -1029,6 +1018,35 @@ void D_DoomMain (void)
     printf ("W_Init: Init WADfiles.\n");
     W_InitMultipleFiles (wadfiles);
     
+    if (registered)
+    {
+	char name[11][8]=
+	{
+	    "e4m1","e4m2","e4m3","e4m4","e4m5","e4m6","e4m7","e4m8","e4m9",
+	    "credit","m_epi4"
+	};
+        int i;
+	for (i = 0;i < 11; i++)
+        {
+            if (W_CheckNumForName(name[i])>-1)
+            {
+	        if (i == 10)
+                {
+                    retail = true;
+                    sprintf(title,
+                    "                         "
+                    "The Ultimate DOOM Startup v%i.%i"
+                    "                           ",
+                    VERSION/100,VERSION%100);
+                    D_RedrawTitle();
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
 
     // Check for -file in shareware
     if (modifiedgame)
@@ -1055,7 +1073,7 @@ void D_DoomMain (void)
 		    I_Error("\nThis is not the registered version.");
     }
     
-    // Iff additonal PWAD files are used, print modified banner
+    // If additonal PWAD files are used, print modified banner
     if (modifiedgame)
     {
 	/*m*/printf (
@@ -1074,7 +1092,10 @@ void D_DoomMain (void)
     
     if (registered)
     {
-        printf("\tregistered version.\n");
+        if (retail)
+            printf("\tretail version.\n");
+        else
+            printf("\tregistered version.\n");
         D_RedrawTitle();
         printf(
             "===========================================================================\n"
