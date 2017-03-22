@@ -6,7 +6,7 @@ Linux Doom ported to DOS. Aims at 100% compatibility with the original Final Doo
 * Doom Registered
 * The Ultimate Doom
 * Doom II: Hell on Earth
-* TNT
+* TNT: Evilution
 * Plutonia
 
 You can see the supported IWADs name [here](https://github.com/AXDOOMER/doom-vanille/wiki/Supported-IWADs).
