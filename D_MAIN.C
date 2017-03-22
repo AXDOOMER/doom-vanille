@@ -435,7 +435,7 @@ void D_AdvanceDemo (void)
     paused = false;
     gameaction = ga_nothing;
 
-    if(W_CheckNumForName("demo4")<0)
+    if(W_CheckNumForName("demo4")<0 || shareware || (registered && !retail))
         demosequence = (demosequence+1)%6;
     else
         demosequence = (demosequence+1)%7;
@@ -1199,6 +1199,12 @@ void D_DoomMain (void)
     if (shareware)
     {
         printf("\tshareware version.\n");
+        D_RedrawTitle();
+	printf (
+	    "===========================================================================\n"
+	    "                                Shareware!\n"
+	    "===========================================================================\n"
+	);
         D_RedrawTitle();
     }
     if (commercial)
