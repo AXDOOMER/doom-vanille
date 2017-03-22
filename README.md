@@ -9,7 +9,7 @@ Linux Doom ported to DOS. Aims at 100% compatibility with the original Final Doo
 * TNT: Evilution
 * The Plutonia Experiment
 
-You can see the supported IWADs name [here](https://github.com/AXDOOMER/doom-vanille/wiki/Supported-IWADs).
+You can see the supported IWAD names [here](https://github.com/AXDOOMER/doom-vanille/wiki/Supported-IWADs).
 
 If you have multiple IWADs in your directory, you can use the `-iwad` parameter to specify which IWAD to use. 
 
