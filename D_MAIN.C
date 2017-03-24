@@ -774,7 +774,7 @@ void IdentifyVersion (void)
 	    return;
 	}
 
-	if ( !access ("plutonia.wad", R_OK ) )
+	if ( !access ("plutonia.wad",R_OK) )
 	{
 	    commercial = true;
 	    plutonia = true;
@@ -782,7 +782,7 @@ void IdentifyVersion (void)
 	    return;
 	}
 
-	if ( !access ( "tnt.wad", R_OK ) )
+	if ( !access ( "tnt.wad",R_OK) )
 	{
 	    commercial = true;
 	    tnt = true;
@@ -912,12 +912,12 @@ void D_DoomMain (void)
     respawnparm = M_CheckParm ("-respawn");
     fastparm = M_CheckParm ("-fast");
     devparm = M_CheckParm ("-devparm");
-    if (M_CheckParm ("-altdeath"))
+    if (M_CheckParm ("-dm3"))
+	deathmatch = 3;
+    else if (M_CheckParm ("-altdeath"))
 	deathmatch = 2;
     else if (M_CheckParm ("-deathmatch"))
 	deathmatch = 1;
-    else if (M_CheckParm ("-dm3"))
-	deathmatch = 3;
 
     if (!commercial)
     {
