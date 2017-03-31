@@ -584,8 +584,8 @@ void P_RespawnSpecials (void)
     int			i;
 
     // only respawn items in deathmatch
-    if (deathmatch != 2)
-	return;	// 
+    if (deathmatch != 2 && deathmatch != 3)
+	return;		
 
     // nothing left to respawn?
     if (iquehead == iquetail)
