@@ -678,15 +678,12 @@ void IdentifyVersion (void)
     }
 {
     int p = M_CheckParm ("-iwad");
-    char* iwadname;
 
     if (p && p < myargc-1)
     {
-	iwadname = myargv[p+1];
-	printf ("Looking for %s\n", iwadname);
 	if( !access (myargv[p+1],R_OK) )
 	{
-	    if ( strcmp(iwadname,"doom2f.wad")==0 )
+	    if ( !strcasecmp (myargv[p+1],"doom2f.wad") )
 	    {
 	        commercial = true;
 	        // Putain de merde
@@ -696,14 +693,14 @@ void IdentifyVersion (void)
 	        return;
 	    }
 
-	    if ( strcmp(iwadname,"doom2.wad")==0 )
+	    if ( !strcasecmp (myargv[p+1],"doom2.wad") )
 	    {
 	        commercial = true;
 	        D_AddFile ("doom2.wad");
 	        return;
 	    }
 
-	    if ( strcmp(iwadname,"plutonia.wad")==0 )
+	    if ( !strcasecmp (myargv[p+1],"plutonia.wad") )
 	    {
 	        commercial = true;
 	        plutonia = true;
@@ -711,7 +708,7 @@ void IdentifyVersion (void)
 	        return;
 	    }
 
-	    if ( strcmp(iwadname,"tnt.wad")==0 )
+	    if ( !strcasecmp (myargv[p+1],"tnt.wad") )
 	    {
 	        commercial = true;
 	        tnt = true;
@@ -719,7 +716,7 @@ void IdentifyVersion (void)
 	        return;
 	    }
 
-	    if ( strcmp(iwadname,"doomu.wad")==0 )
+	    if ( !strcasecmp (myargv[p+1],"doomu.wad") )
 	    {
 	        registered = true;
 	        retail = true;
@@ -727,31 +724,26 @@ void IdentifyVersion (void)
 	        return;
 	    }
 
-	    if ( strcmp(iwadname,"doomr.wad")==0 )
+	    if ( !strcasecmp (myargv[p+1],"doomr.wad") )
 	    {
 	        registered = true;
 	        D_AddFile ("doomr.wad");
 	        return;
 	    }
 
-	    if ( strcmp(iwadname,"doom.wad")==0 )
+	    if ( !strcasecmp (myargv[p+1],"doom.wad") )
 	    {
 	        registered = true;
 	        D_AddFile ("doom.wad");
 	        return;
 	    }
 
-	    if ( strcmp(iwadname,"doom1.wad")==0 )
+	    if ( !strcasecmp (myargv[p+1],"doom1.wad") )
 	    {
 	        shareware = true;
 	        D_AddFile ("doom1.wad");
 	        return;
 	    }
-	}
-	else
-	{
-	    printf ("Specified IWAD %s not found.\n", iwadname);
-	    //I_Error ("Specified IWAD not found.\n");
 	}
     }
     else
