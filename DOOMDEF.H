@@ -25,6 +25,9 @@
 #include <stdio.h>
 #include <string.h>
 
+// Fixed point.
+#include "m_fixed.h"
+
 //
 // Global parameters/defines.
 //
