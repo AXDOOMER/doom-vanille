@@ -1100,8 +1100,12 @@ void G_DoCompleted (void)
     wminfo.maxitems = totalitems; 
     wminfo.maxsecret = totalsecret; 
     wminfo.maxfrags = 0; 
-    if ( commercial )
+    if ( plutonia || tnt )
+	wminfo.partime = 0; 
+    else if ( commercial )
 	wminfo.partime = 35*cpars[gamemap-1]; 
+    else if ( gameepisode > 3 )
+	wminfo.partime = 0; 
     else
 	wminfo.partime = 35*pars[gameepisode][gamemap]; 
     wminfo.pnum = consoleplayer; 

@@ -1389,9 +1389,6 @@ void WI_updateStats(void)
 	if (cnt_time >= plrs[me].stime / TICRATE)
 	    cnt_time = plrs[me].stime / TICRATE;
 
-	if (wbs->epsd > 2 || plutonia || tnt)
-	    cnt_par = wbs->partime / TICRATE;
-
 	cnt_par += 3;
 
 	if (cnt_par >= wbs->partime / TICRATE)
