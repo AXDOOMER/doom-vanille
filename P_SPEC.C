@@ -1323,6 +1323,10 @@ void P_SpawnSpecials (void)
 	switch(lines[i].special)
 	{
 	  case 48:
+	    if (numlinespecials >= MAXLINEANIMS)
+	    {
+		I_Error("Too many scrolling walls!");
+	    }
 	    // EFFECT FIRSTCOL SCROLL+
 	    linespeciallist[numlinespecials] = &lines[i];
 	    numlinespecials++;
