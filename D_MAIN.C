@@ -1135,7 +1135,7 @@ void D_DoomMain (void)
     }
 
     // Check for -file in shareware
-    if (modifiedgame)
+    if (modifiedgame || !commercial)
     {
 	// These are the lumps that will be checked in IWAD,
 	// if any one is not present, execution will be aborted.
@@ -1147,16 +1147,18 @@ void D_DoomMain (void)
 	};
 	int i;
 	
-	if (shareware)
-	    I_Error("\nYou cannot -file with the shareware "
-		    "version. Register!");
-
 	// Check for fake IWAD with right name,
 	// but w/o all the lumps of the registered version. 
 	if (registered)
 	    for (i = 0;i < 23; i++)
 		if (W_CheckNumForName(name[i])<0)
-		    I_Error("\nThis is not the registered version.");
+		{
+		    shareware = true;
+		    retail = registered = false;
+		}
+
+	if (shareware && modifiedgame)
+	    I_Error("\nYou cannot -file with the shareware version.");
     }
     
     // If additonal PWAD files are used, print modified banner
@@ -1194,12 +1196,6 @@ void D_DoomMain (void)
     if (shareware)
     {
         printf("\tshareware version.\n");
-        D_RedrawTitle();
-	printf (
-	    "===========================================================================\n"
-	    "                                Shareware!\n"
-	    "===========================================================================\n"
-	);
         D_RedrawTitle();
     }
     if (commercial)
