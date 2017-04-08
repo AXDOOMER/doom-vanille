@@ -164,11 +164,13 @@ void W_AddFile (char *filename)
 	header.numlumps = LONG(header.numlumps);
 	header.infotableofs = LONG(header.infotableofs);
 	length = header.numlumps*sizeof(filelump_t);
-	fileinfo = alloca (length);
-	if (!fileinfo)
+	if (header.numlumps > 4046)
 	{
-	    I_Error ("There isn't sufficient stack space available for %s", filename);
+	    // alloca would saturate the stack segment
+	    I_Error ("There isn't sufficient stack space available "
+		     "for %s (%d lumps)\n", filename, header.numlumps);
 	}
+	fileinfo = alloca (length);
 	lseek (handle, header.infotableofs, SEEK_SET);
 	read (handle, fileinfo, length);
 	numlumps += header.numlumps;
@@ -226,10 +228,6 @@ void W_Reload (void)
     header.infotableofs = LONG(header.infotableofs);
     length = lumpcount*sizeof(filelump_t);
     fileinfo = alloca (length);
-    if (!fileinfo)
-    {
-        I_Error ("There isn't sufficient stack space available for %s", reloadname);
-    }
     lseek (handle, header.infotableofs, SEEK_SET);
     read (handle, fileinfo, length);
     
