@@ -436,7 +436,7 @@ void I_ShutdownSound(void)
     extern volatile int ticcount;
     S_PauseSound();
     s = ticcount + 30;
-    while (s != ticcount);
+    //while (s != ticcount);
     DMX_DeInit();
 }
 
