@@ -19,7 +19,7 @@ Doom Vanille is based on [PCDoom](https://github.com/nukeykt/pcdoom), but was up
 
 ## Changes
 
-Please visit the [bug fixes](https://github.com/AXDOOMER/doom-vanille/wiki/Fixed-bugs) page on the [wiki](https://github.com/AXDOOMER/doom-vanille/wiki).
+Please visit the [bug fixes and improvements](https://github.com/AXDOOMER/doom-vanille/wiki/Changes) page on the [wiki](https://github.com/AXDOOMER/doom-vanille/wiki).
 
 ## Build instructions
 
