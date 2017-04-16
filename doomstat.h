@@ -72,6 +72,7 @@ extern  boolean         commercial;
 extern  boolean         plutonia;
 extern  boolean         tnt;
 extern  boolean         french;
+extern  boolean         altfinal;
 
 
 // Nightmare mode flag, single player.

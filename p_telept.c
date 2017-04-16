@@ -97,7 +97,7 @@ EV_Teleport
 		if (!P_TeleportMove (thing, m->x, m->y))
 		    return 0;
 		
-		if (!(plutonia || tnt))
+		if (!(plutonia || tnt) || altfinal)
 		    thing->z = thing->floorz;  //fixme: not needed?
 		if (thing->player)
 		    thing->player->viewz = thing->z+thing->player->viewheight;

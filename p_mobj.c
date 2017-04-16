@@ -281,7 +281,7 @@ void P_ZMovement (mobj_t* mo)
 	// Note (id):
 	//  somebody left this after the setting momz to 0,
 	//  kinda useless there.
-	if (mo->flags & MF_SKULLFLY && (retail || plutonia || tnt))
+	if (mo->flags & MF_SKULLFLY && (retail || plutonia || tnt || altfinal))
 	{
 	    // the skull slammed into something
 	    mo->momz = -mo->momz;
@@ -307,7 +307,7 @@ void P_ZMovement (mobj_t* mo)
 	mo->z = mo->floorz;
 
 	// hit the floor
-	if (mo->flags & MF_SKULLFLY && !(retail || plutonia || tnt))
+	if (mo->flags & MF_SKULLFLY && !(retail || plutonia || tnt || altfinal))
 	{
 	    // the skull slammed into something
 	    mo->momz = -mo->momz;

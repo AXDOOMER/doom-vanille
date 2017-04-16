@@ -112,6 +112,7 @@ boolean         commercial;
 boolean         plutonia;
 boolean         tnt;
 boolean         french;
+boolean         altfinal;
 
 
 char		wadfile[1024];		// primary wad file
@@ -452,7 +453,7 @@ void D_AdvanceDemo (void)
     paused = false;
     gameaction = ga_nothing;
 
-    if((retail || plutonia || tnt) && W_CheckNumForName("demo4"))
+    if((retail || plutonia || tnt) && !altfinal && W_CheckNumForName("demo4"))
         demosequence = (demosequence+1)%7;
     else
         demosequence = (demosequence+1)%6;
@@ -693,6 +694,9 @@ void IdentifyVersion (void)
 	strcpy (basedefault,DEVDATA"default.cfg");
 	return;
     }
+
+    if (M_CheckParm ("-alt"))
+	altfinal = true;
 {
     int p = M_CheckParm ("-iwad");
 
