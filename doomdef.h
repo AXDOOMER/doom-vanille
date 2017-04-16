@@ -25,9 +25,6 @@
 #include <stdio.h>
 #include <string.h>
 
-// Fixed point.
-#include "m_fixed.h"
-
 //
 // Global parameters/defines.
 //
@@ -228,6 +225,26 @@ typedef enum
 #define KEY_RALT	(0x80+0x38)
 
 #define KEY_LALT	KEY_RALT
+
+fixed_t	FixedMul (fixed_t a, fixed_t b);
+fixed_t	FixedDiv (fixed_t a, fixed_t b);
+fixed_t	FixedDiv2 (fixed_t a, fixed_t b);
+
+#pragma aux FixedMul =	\
+	"imul ebx",			\
+	"shrd eax,edx,16"	\
+	parm	[eax] [ebx] \
+	value	[eax]		\
+	modify exact [eax edx]
+
+#pragma aux FixedDiv2 =	\
+	"cdq",				\
+	"shld edx,eax,16",	\
+	"sal eax,16",		\
+	"idiv ebx"			\
+	parm	[eax] [ebx] \
+	value	[eax]		\
+	modify exact [eax edx]
 
 #define SHORT(x)	(x)
 #define LONG(x)		(x)
