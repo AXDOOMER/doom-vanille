@@ -10,8 +10,8 @@ This means that:
 4. This source port can emulate the alternative Final Doom executable that came with the id Anthology (use `-alt`)
 
 ## Supported games
-* Doom Shareware
-* Doom Registered
+* Doom shareware
+* Doom registered
 * The Ultimate Doom
 * Doom II: Hell on Earth
 * Final Doom - TNT: Evilution
@@ -23,7 +23,9 @@ If you have multiple IWADs in your directory, you can use the `-iwad` parameter 
 
 ## Source code
 
-Doom Vanille is based on [PCDoom](https://github.com/nukeykt/pcdoom), but was updated to [PCDoom2](https://github.com/nukeykt/PCDoom-v2/).
+Doom Vanille is based on [PCDoom](https://github.com/nukeykt/pcdoom), but was updated to [PCDoom2](https://github.com/nukeykt/PCDoom-v2/). 
+
+Unlike the latter, no other tool than the Watcom compiler is necessary to compile it. 
 
 ## Changes
 
