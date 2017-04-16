@@ -745,13 +745,6 @@ void IdentifyVersion (void)
 	        return;
 	    }
 
-	    if ( !strcasecmp (myargv[p+1],"doomr.wad") )
-	    {
-	        registered = true;
-	        D_AddFile ("doomr.wad");
-	        return;
-	    }
-
 	    if ( !strcasecmp (myargv[p+1],"doom.wad") )
 	    {
 	        registered = true;
@@ -808,13 +801,6 @@ void IdentifyVersion (void)
 	    registered = true;
 	    retail = true;
 	    D_AddFile ("doomu.wad");
-	    return;
-	}
-
-	if ( !access ("doomr.wad",R_OK) )
-	{
-	    registered = true;
-	    D_AddFile ("doomr.wad");
 	    return;
 	}
 
