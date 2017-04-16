@@ -20,6 +20,7 @@
 
 
 #include "doomdef.h"
+#include "doomstat.h"
 
 #include "s_sound.h"
 
@@ -96,7 +97,8 @@ EV_Teleport
 		if (!P_TeleportMove (thing, m->x, m->y))
 		    return 0;
 		
-		thing->z = thing->floorz;  //fixme: not needed?
+		if (!(plutonia || tnt))
+		    thing->z = thing->floorz;  //fixme: not needed?
 		if (thing->player)
 		    thing->player->viewz = thing->z+thing->player->viewheight;
 				
