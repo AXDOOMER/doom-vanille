@@ -438,10 +438,10 @@ void D_AdvanceDemo (void)
     paused = false;
     gameaction = ga_nothing;
 
-    if(W_CheckNumForName("demo4")<0 || shareware || (registered && !retail))
-        demosequence = (demosequence+1)%6;
-    else
+    if((retail || plutonia || tnt) && W_CheckNumForName("demo4"))
         demosequence = (demosequence+1)%7;
+    else
+        demosequence = (demosequence+1)%6;
 
     switch (demosequence)
     {
@@ -793,6 +793,13 @@ void IdentifyVersion (void)
 	    return;
 	}
 
+	if ( !access ("doomr.wad",R_OK) )
+	{
+	    registered = true;
+	    D_AddFile ("doomr.wad");
+	    return;
+	}
+
 	if ( !access ("doom.wad",R_OK) )
 	{
 	    registered = true;
@@ -1122,7 +1129,7 @@ void D_DoomMain (void)
                     sprintf(title,
                     "                         "
                     "The Ultimate DOOM Startup v%i.%i"
-                    "                           ",
+                    "                        ",
                     VERSION/100,VERSION%100);
                     D_RedrawTitle();
                 }
