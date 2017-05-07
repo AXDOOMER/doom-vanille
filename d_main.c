@@ -652,6 +652,8 @@ void D_AddFile (char *file)
 //
 void IdentifyVersion (void)
 {
+    int p;
+
     strcpy(basedefault,"default.cfg");
     if (M_CheckParm ("-shdev"))
     {
@@ -695,10 +697,10 @@ void IdentifyVersion (void)
 	return;
     }
 
-    if (M_CheckParm ("-alt"))
+    if (M_CheckParm ("-altfinal"))
 	altfinal = true;
-{
-    int p = M_CheckParm ("-iwad");
+
+    p = M_CheckParm ("-iwad");
 
     if (p && p < myargc-1)
     {
@@ -818,7 +820,7 @@ void IdentifyVersion (void)
 	    return;
 	}
     }
-}
+
     printf("Game mode indeterminate.\n");
     exit(1);
     //I_Error ("Game mode indeterminate\n");
