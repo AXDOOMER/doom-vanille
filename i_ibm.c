@@ -1194,12 +1194,6 @@ byte *I_ZoneBase(int *size)
     int maxmem = 0x800000;
     int p;
 
-    p = M_CheckParm ("-mb");
-    if (p && p < myargc-1)
-    {
-        maxmem = 1024 * 1024 * atoi(myargv[p + 1]);
-    }
-
     memset(meminfo, 0, sizeof(meminfo));
     segread(&segregs);
     segregs.es = segregs.ds;
@@ -1209,6 +1203,12 @@ byte *I_ZoneBase(int *size)
 
     heap = meminfo[0];
     printf("DPMI memory: 0x%x", heap);
+
+    p = M_CheckParm ("-mb");
+    if (p && p < myargc-1)
+    {
+        maxmem = 1024 * 1024 * atoi(myargv[p + 1]);
+    }
 
     do
     {
