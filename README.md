@@ -7,7 +7,7 @@ This means that:
 1. This source port will work with the registered and shareware versions of Doom. 
 2. This source port will fix the [boucing Lost Souls bug](https://doomwiki.org/wiki/Demo_desyncing_caused_by_bouncing_lost_souls) when playing The Ultimate Doom or Final Doom. 
 3. This source port will emulate the [Final Doom teleportation bug](https://doomwiki.org/wiki/Final_Doom_teleporters_do_not_set_Z_coordinate) when playing Final Doom. 
-4. This source port can emulate the alternative Final Doom executable that came with the id Anthology (use `-alt`)
+4. This source port can emulate the alternative Final Doom executable that came with the id Anthology (use `-altfinal`)
 
 ## Supported games
 * Doom shareware
