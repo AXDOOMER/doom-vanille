@@ -1191,6 +1191,14 @@ byte *I_ZoneBase(int *size)
     int meminfo[32];
     int heap;
     byte *ptr;
+    int maxmem = 0x800000;
+    int p;
+
+    p = M_CheckParm ("-mb");
+    if (p && p < myargc-1)
+    {
+        maxmem = 1024 * 1024 * atoi(myargv[p + 1]);
+    }
 
     memset(meminfo, 0, sizeof(meminfo));
     segread(&segregs);
@@ -1205,9 +1213,9 @@ byte *I_ZoneBase(int *size)
     do
     {
         heap -= 0x20000; // leave 128k alone
-        if (heap > 0x800000)
+        if (heap > maxmem)
         {
-            heap = 0x800000;
+            heap = maxmem;
         }
         ptr = malloc(heap);
     } while (!ptr);
