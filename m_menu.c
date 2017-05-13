@@ -1159,8 +1159,9 @@ M_DrawThermo
     }
     V_DrawPatchDirect (xx,y,0,W_CacheLumpName("M_THERMR",PU_CACHE));
 
-    V_DrawPatchDirect ((x+8) + thermDot*8,y,
-		       0,W_CacheLumpName("M_THERMO",PU_CACHE));
+    if (thermDot <= 30)
+	V_DrawPatchDirect ((x+8) + thermDot*8,y,
+			   0,W_CacheLumpName("M_THERMO",PU_CACHE));
 }
 
 
