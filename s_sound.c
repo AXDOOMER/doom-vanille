@@ -292,7 +292,7 @@ S_AdjustSoundParams
     // From _GG1_ p.428. Appox. eucledian distance fast.
     approx_dist = adx + ady - ((adx < ady ? adx : ady)>>1);
     
-    if ((gamemap != 8 || commercial)
+    if (gamemap != 8
 	&& approx_dist > S_CLIPPING_DIST)
     {
 	return 0;
@@ -335,9 +335,6 @@ S_AdjustSoundParams
 		* ((S_CLIPPING_DIST - approx_dist)>>FRACBITS))
 	    / S_ATTENUATOR; 
     }
-    
-    if (snd_SfxVolume == 0)
-	return 0;
     
     return (*vol > 0);
 }
