@@ -1125,25 +1125,24 @@ void D_DoomMain (void)
 	    "credit","m_epi4","demo4"
 	};
         int i;
+
+        retail = true;
 	for (i = 0;i < 12; i++)
+            if (W_CheckNumForName(name[i])<0)
+            {
+	        retail = false;
+	        break;
+            }
+
+        if (retail)
         {
-            if (W_CheckNumForName(name[i])>-1)
-            {
-	        if (i == 11)
-                {
-                    retail = true;
-                    sprintf(title,
-                    "                         "
-                    "The Ultimate DOOM Startup v%i.%i"
-                    "                        ",
-                    VERSION/100,VERSION%100);
-                    D_RedrawTitle();
-                }
-            }
-            else
-            {
-                break;
-            }
+            retail = true;
+            sprintf(title,
+            "                         "
+            "The Ultimate DOOM Startup v%i.%i"
+            "                        ",
+            VERSION/100,VERSION%100);
+            D_RedrawTitle();
         }
     }
 
