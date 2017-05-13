@@ -336,6 +336,9 @@ S_AdjustSoundParams
 	    / S_ATTENUATOR; 
     }
     
+    if (snd_SfxVolume == 0)
+	return 0;
+    
     return (*vol > 0);
 }
 
