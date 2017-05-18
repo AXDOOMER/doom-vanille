@@ -453,7 +453,7 @@ void D_AdvanceDemo (void)
     paused = false;
     gameaction = ga_nothing;
 
-    if((retail || plutonia || tnt) && !altfinal && W_CheckNumForName("demo4"))
+    if((retail || plutonia || tnt) && !altfinal && !(W_CheckNumForName("demo4")<0))
         demosequence = (demosequence+1)%7;
     else
         demosequence = (demosequence+1)%6;
