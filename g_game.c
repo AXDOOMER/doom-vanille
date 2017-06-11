@@ -114,6 +114,7 @@ int             displayplayer;          // view being displayed
 int             gametic; 
 int             levelstarttic;          // gametic at level start 
 int             totalkills, totalitems, totalsecret;    // for intermission 
+int             demostarttic;           // fix revenant internal demo bug
  
 char            demoname[32]; 
 boolean         demorecording; 
@@ -1422,6 +1423,8 @@ G_InitNew
     gamemap = map; 
     gameskill = skill; 
  
+    demostarttic = 0; // fix revenant internal demo bug
+ 
     viewactive = true;
     
     // set the sky map for the episode
@@ -1585,6 +1588,7 @@ void G_DoPlayDemo (void)
     precache = false;
     G_InitNew (skill, episode, map); 
     precache = true; 
+    demostarttic = gametic; // fix revenant internal demo bug
 
     usergame = false; 
     demoplayback = true; 
