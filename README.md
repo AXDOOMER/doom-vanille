@@ -31,6 +31,10 @@ Unlike the latter, no other tool than the Watcom compiler is necessary to compil
 
 Please visit the [bug fixes and improvements](https://github.com/AXDOOMER/doom-vanille/wiki/Changes) page on the [wiki](https://github.com/AXDOOMER/doom-vanille/wiki).
 
+## Download
+
+Get the latest release [here](https://github.com/AXDOOMER/doom-vanille/releases).
+
 ## Build instructions
 
 1) Install [Open Watcom C version 1.9](https://sourceforge.net/projects/openwatcom/files/open-watcom-1.9/).
