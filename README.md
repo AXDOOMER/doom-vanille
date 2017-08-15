@@ -33,7 +33,7 @@ Please visit the [bug fixes and improvements](https://github.com/AXDOOMER/doom-v
 
 ## Build instructions
 
-1) Install Open Watcom C.
+1) Install [Open Watcom C version 1.9](https://sourceforge.net/projects/openwatcom/files/open-watcom-1.9/).
 
 2) Open pcdoom.wpj in Watcom.
 
