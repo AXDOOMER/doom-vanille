@@ -102,36 +102,29 @@ void F_StartFinale (void)
 	    case 6:
 	      finaleflat = "SLIME16";
 	      finaletext = p1text;
-	      finalemusic = mus_read_m;
 	      break;
 	    case 11:
 	      finaleflat = "RROCK14";
 	      finaletext = p2text;
-	      finalemusic = mus_read_m;
 	      break;
 	    case 20:
 	      finaleflat = "RROCK07";
 	      finaletext = p3text;
-	      finalemusic = mus_read_m;
 	      break;
 	    case 30:
 	      finaleflat = "RROCK17";
 	      finaletext = p4text;
-	      finalemusic = mus_read_m;
 	      break;
 	    case 15:
 	      finaleflat = "RROCK13";
 	      finaletext = p5text;
-	      finalemusic = mus_read_m;
 	      break;
 	    case 31:
 	      finaleflat = "RROCK19";
 	      finaletext = p6text;
-	      finalemusic = mus_read_m;
 	      break;
 	    default:
 	      // Ouch.
-	      finalemusic = mus_read_m;
 	      break;
 	  }
         }
@@ -142,36 +135,29 @@ void F_StartFinale (void)
 	    case 6:
 	      finaleflat = "SLIME16";
 	      finaletext = t1text;
-	      finalemusic = mus_read_m;
 	      break;
 	    case 11:
 	      finaleflat = "RROCK14";
 	      finaletext = t2text;
-	      finalemusic = mus_read_m;
 	      break;
 	    case 20:
 	      finaleflat = "RROCK07";
 	      finaletext = t3text;
-	      finalemusic = mus_read_m;
 	      break;
 	    case 30:
 	      finaleflat = "RROCK17";
 	      finaletext = t4text;
-	      finalemusic = mus_read_m;
 	      break;
 	    case 15:
 	      finaleflat = "RROCK13";
 	      finaletext = t5text;
-	      finalemusic = mus_read_m;
 	      break;
 	    case 31:
 	      finaleflat = "RROCK19";
 	      finaletext = t6text;
-	      finalemusic = mus_read_m;
 	      break;
 	    default:
 	      // Ouch.
-	      finalemusic = mus_read_m;
 	      break;
 	  }
         }
@@ -183,39 +169,33 @@ void F_StartFinale (void)
 	    case 6:
 	      finaleflat = "SLIME16";
 	      finaletext = c1text;
-	      finalemusic = mus_read_m;
 	      break;
 	    case 11:
 	      finaleflat = "RROCK14";
 	      finaletext = c2text;
-	      finalemusic = mus_read_m;
 	      break;
 	    case 20:
 	      finaleflat = "RROCK07";
 	      finaletext = c3text;
-	      finalemusic = mus_read_m;
 	      break;
 	    case 30:
 	      finaleflat = "RROCK17";
 	      finaletext = c4text;
-	      finalemusic = mus_read_m;
 	      break;
 	    case 15:
 	      finaleflat = "RROCK13";
 	      finaletext = c5text;
-	      finalemusic = mus_read_m;
 	      break;
 	    case 31:
 	      finaleflat = "RROCK19";
 	      finaletext = c6text;
-	      finalemusic = mus_read_m;
 	      break;
 	    default:
 	      // Ouch.
-	      finalemusic = mus_read_m;
 	      break;
 	  }
         }
+	finalemusic = mus_read_m;
     }
     else
     {
