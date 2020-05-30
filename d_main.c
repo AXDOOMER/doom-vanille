@@ -1136,7 +1136,6 @@ void D_DoomMain (void)
 
         if (retail)
         {
-            retail = true;
             sprintf(title,
             "                         "
             "The Ultimate DOOM Startup v%i.%i"
@@ -1151,18 +1150,18 @@ void D_DoomMain (void)
     {
 	// These are the lumps that will be checked in IWAD,
 	// if any one is not present, execution will be aborted.
-	char name[23][8]=
+	char name[20][8]=
 	{
 	    "e2m1","e2m2","e2m3","e2m4","e2m5","e2m6","e2m7","e2m8","e2m9",
 	    "e3m1","e3m3","e3m3","e3m4","e3m5","e3m6","e3m7","e3m8","e3m9",
-	    "dphoof","bfgga0","heada1","cybra1","spida1d1"
+	    "dphoof","bfgga0"
 	};
 	int i;
 	
 	// Check for fake IWAD with right name,
 	// but w/o all the lumps of the registered version. 
 	if (registered)
-	    for (i = 0;i < 23; i++)
+	    for (i = 0;i < 20; i++)
 		if (W_CheckNumForName(name[i])<0)
 		{
 		    shareware = true;
