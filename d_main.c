@@ -697,7 +697,7 @@ void IdentifyVersion (void)
 	return;
     }
 
-    if (M_CheckParm ("-altfinal"))
+    if (M_CheckParm ("-altfinal") || M_CheckParm ("-alt"))
 	altfinal = true;
 
     p = M_CheckParm ("-iwad");

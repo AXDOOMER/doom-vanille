@@ -242,7 +242,7 @@ void I_sndArbitrateCards(void)
         snd_MusicDevice = snd_none;
     }
     // Check whether to randomly pitch-shift sounds
-    if (M_CheckParm("-pitch"))
+    if (M_CheckParm("-pitch") || M_CheckParm("-sndpitch"))
     {
         pitchshifting = true;
     }
